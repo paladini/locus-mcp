@@ -5,7 +5,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/paladini/locus-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/paladini/locus-mcp/actions/workflows/ci.yml)
 
-Locus gives your AI coding agent a map of your codebase. If you use Cursor, Codex, Claude Code, or Copilot to write and change code, Locus connects that agent to the same kind of "go to definition" and "find all references" intelligence your IDE uses — through [MCP](https://modelcontextprotocol.io) (Model Context Protocol), a standard way for your AI tool to call specialized helpers. You configure it once; your agent uses six small tools to find symbols, trace callers, read types, and catch errors before you run tests.
+Locus gives your AI coding agent a map of your codebase. Whether you write code yourself or work through Cursor, Codex, or Claude Code, Locus connects your agent to the same go-to-definition and find-references intelligence your IDE uses — through [MCP](https://modelcontextprotocol.io) (Model Context Protocol), a standard plug-in layer for AI tools. Configure it once; your agent uses six small tools to find symbols, trace callers, read types, and catch errors before you run tests.
 
 ## Why you might want this
 
@@ -30,7 +30,7 @@ It is **not** for people who want symbolic editing, agent memory, or a full refa
    npx @locus-dev/mcp init
    npx @locus-dev/mcp check
    ```
-3. **Add Locus to your agent's MCP config** — copy a block from [Copy-paste configs](#copy-paste-configs) below. Set `cwd` to your project's absolute path.
+3. **Add Locus to your agent's MCP config** — MCP is how AI hosts call helper tools like Locus; copy a block from [Copy-paste configs](#copy-paste-configs) below and set `cwd` to your project's absolute path.
 4. **Reload MCP** — restart Cursor, reload Codex, or reopen Claude Code so the new server appears.
 5. **Try a prompt** — ask your agent: *"Use Locus to find where `UserService` is defined and list all references."* If it calls the `locate` and `refs` tools, you are set.
 
