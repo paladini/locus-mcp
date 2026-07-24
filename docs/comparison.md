@@ -1,102 +1,73 @@
 # Locus vs Alternatives
 
-A practical comparison for teams choosing an **MCP + LSP code intelligence** stack for AI agents.
+A factual comparison for choosing an MCP + LSP stack for AI agents.
 
-## Summary
+## At a glance
 
 | | **Locus** | **Serena** | **mcp-language-server** | **cclsp** |
 |---|-----------|------------|-------------------------|-----------|
-| Tagline | Ground truth for your coding agent — without the weight of a full IDE toolkit | The IDE for your coding agent | Generic LSP bridge | Claude Code LSP plugin |
-| Primary goal | Semantic navigation layer | Full agent IDE (edit + refactor + memory) | Generic LSP-over-MCP | Host-native LSP for Claude Code |
-| **Weight & efficiency** | **Lightweight** — `npx @locus-dev/mcp`, 6 tools, lean TS bridge, low agent cognitive load | **Heavy** — Python/`uv` install, many tools, full agent toolkit, higher context cost | Variable — often verbose JSON, unfixed tool catalog | Host-native — no separate MCP server |
-| End user | AI agent (human installs) | AI agent (human installs) | AI agent / experimenter | Claude Code user |
-| MCP tools | **6 curated tools** | Many (find, edit, refactor, memory, …) | Variable / generic | Host-specific |
-| Symbolic editing | **No** — use host Edit | Yes (`replace_symbol_body`, etc.) | Depends on bridge | Limited |
-| Agent memory | **No** | Yes | No | No |
-| Symbol-first API | Yes | Yes | Partial | Yes |
-| Compact LLM output | Yes (line format) | Mixed | Often verbose JSON | Mixed |
-| Complements host Edit/Grep | **Yes — by design** | Replaces more IDE duties | MCP-only | Claude Code only |
-| Host adapters | Cursor hooks + Claude skill (roadmap) | Context profiles per host | MCP-only | Claude Code |
-| Config formats | locus.toml, locus.json, .lsp.json | Project-specific | Varies | cclsp config |
-| npm package | `@locus-dev/mcp` | `serena` (uv/Python) | Community packages | N/A |
+| Primary goal | LSP navigation for agents | Full agent IDE (edit + refactor + memory) | Generic LSP-over-MCP | Host-native LSP for Claude Code |
+| Install | `npx @locus-dev/mcp` (Node.js 22+) | `uv tool install serena-agent` (Python) | Community packages | Host plugin |
+| MCP tools | 6 fixed tools | Many (find, edit, refactor, memory, …) | Variable / generic | Host-specific |
+| Symbolic editing | No — use host Edit | Yes | Depends on bridge | Limited |
+| Agent memory | No | Yes | No | No |
+| Compact output | Line-oriented text | Mixed | Often verbose JSON | Mixed |
+| Complements host Edit/Grep | Yes | Partially — overlaps with host | MCP-only | Claude Code only |
+| Built-in languages | 4 (TS/JS, Python, Go, Rust) | 40+ via LSP backends | Varies | Varies |
+| Config | locus.toml, locus.json, .lsp.json | Project-specific | Varies | cclsp config |
 | License | MIT | MIT | Varies | Check upstream |
 
 ## Locus
 
-**Best for:** Teams whose MCP host (Cursor, Claude Code, Codex) already handles edits and search, and who want a **thin, predictable LSP navigation layer** with minimal context overhead.
+**Fits when:** Your MCP host (Cursor, Claude Code, Codex) already handles edits and search, and you want a thin LSP navigation layer.
 
-**Strengths:**
+**Provides:**
 
-- Six well-documented tools (`locate`, `refs`, `hover`, `diagnostics`, `status`, `rename`)
+- Six documented tools: `locate`, `refs`, `hover`, `diagnostics`, `status`, `rename`
 - Symbol resolver with qualified names and ambiguity handling
-- Compact line-oriented output (`src/foo.ts:12:4: symbol | snippet`)
-- `.lsp.json` compatibility for Claude/Open Plugins projects
-- CLI for init, check, warm, serve
-- Dual publish to npm and GitHub Packages
+- Compact line output (`src/foo.ts:12:4: symbol | snippet`)
+- `.lsp.json` compatibility
+- CLI: `init`, `check`, `warm`, `serve`
 
-**Trade-offs:**
+**Does not provide:**
 
-- **No symbolic editing** — agents apply changes through host Edit tools (Serena can be more token-efficient for large symbolic refactors)
-- **No agent memory** — no long-lived project knowledge store
-- **Four built-in languages** — Serena supports 40+; Locus is extensible via config but ships TS/JS, Python, Go, Rust
-- Smaller tool surface by design — not a full LSP passthrough
-- Rename is preview-only by default; host applies the patch
-
-**Positioning:** Locus complements grep and host tools; it does not try to be the agent's IDE. **Lightweight** = lighter to adopt and operate daily, not "always fewer tokens for every task."
+- Symbolic editing or refactoring execution
+- Agent memory
+- Passthrough to arbitrary LSP methods
+- Rename apply (preview only; host applies the patch)
 
 ## Serena
 
-**Best for:** Teams that want **IDE-grade editing, refactoring, and memory** inside MCP — a broad toolkit that replaces more of what a human IDE would do for the agent.
+**Fits when:** You want editing, refactoring, and memory inside MCP — a broader toolkit that covers more of what an IDE would do for the agent.
 
-**Strengths:**
+**Provides:**
 
-- Rich symbolic editing (`find_symbol`, `replace_symbol_body`, `insert_after_symbol`, …)
-- Agent memory for long-lived workflows
-- Context profiles tuned per host (Claude Code, IDE assistants, etc.)
-- 30+ languages via LSP backends
-- Large community and active maintenance (Oraios)
+- Symbolic editing (`find_symbol`, `replace_symbol_body`, `insert_after_symbol`, …)
+- Agent memory for long sessions
+- 40+ languages via LSP backends
+- Context profiles per host
 
 **Trade-offs:**
 
-- Many tools — higher context cost and overlap with capable hosts
-- Overlaps with Cursor/Claude Code native edit tools unless configured carefully
-- Different install path (Python/`uv`) vs Locus (Node.js/npm)
+- Larger tool surface — more overlap with capable hosts like Cursor
+- Python/`uv` install path vs Node.js/npm for Locus
+- Can be more token-efficient for large symbolic refactors than many host-side edits
 
-**Compared to Locus:** Serena owns **"The IDE for your coding agent."** Locus owns **"Ground truth for your coding agent."** If your host already edits well, Locus adds semantics without a second IDE. If you want symbolic edits and memory in one MCP stack, Serena is the closer fit.
-
-**They are complementary categories, not drop-in substitutes.** Running both at full tool surface is usually redundant; pick based on whether you need navigation-only or full IDE replacement.
+**Compared to Locus:** Serena covers editing and memory; Locus covers navigation and diagnostics only. If your host already edits well, Locus adds semantics without a second IDE inside MCP.
 
 ## mcp-language-server
 
-**Best for:** Experimentation with generic LSP-over-MCP bridges or access to uncommon LSP methods.
+**Fits when:** You need generic LSP-over-MCP access or uncommon LSP methods.
 
-**Compared to Locus:** Generic bridges often expose raw LSP methods or large JSON payloads. Locus adds a **symbol layer**, formatting, status codes, and a fixed six-tool contract tuned for agents.
+**Compared to Locus:** Generic bridges often expose raw LSP methods or large JSON payloads. Locus adds a symbol layer, formatted output, status codes, and a fixed six-tool contract.
 
 ## cclsp
 
-**Best for:** Claude Code users wanting a dedicated LSP integration without MCP.
+**Fits when:** You use Claude Code and want host-native LSP without a separate MCP server.
 
-**Compared to Locus:** cclsp is host-native; Locus is **MCP-native** and works across Cursor, Claude Code, Codex, VS Code, and other MCP hosts with the same config.
+**Compared to Locus:** cclsp is host-native; Locus is MCP-native and works across Cursor, Claude Code, Codex, and other MCP hosts with the same config.
 
-## When to choose Locus
-
-Choose Locus when you:
-
-- Run AI agents in **Cursor**, **Claude Code**, **Codex**, or other MCP hosts that already edit and grep well
-- Want **ground-truth LSP semantics** without managing raw LSP JSON-RPC in the agent loop
-- Prefer **grep + Locus** over grep alone for refactors and navigation
-- Need **compact tool output** to preserve context window for reasoning
-- Do **not** need symbolic editing or agent memory from MCP
-
-## When to choose Serena
-
-Choose Serena when you:
-
-- Want **symbolic editing and refactoring** as MCP tools
-- Need **agent memory** across sessions
-- Prefer one broad IDE toolkit over relying on host-native edits
-
-## When to combine tools
+## Task routing
 
 | Task | Tool |
 |------|------|
@@ -111,7 +82,7 @@ Choose Serena when you:
 
 ## See also
 
-- [Positioning deep dive](./positioning.md)
+- [Understanding Locus](./positioning.md)
 - [FAQ](./faq.md)
 - [Getting started](./getting-started.md)
 - [Tools reference](./tools.md)

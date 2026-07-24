@@ -1,25 +1,24 @@
 # Locus SEO & Discoverability Notes
 
-Meta-oriented content for search engines and AI retrieval systems (GEO).
+Keywords and descriptions for search engines and AI retrieval. Keep factual; avoid marketing language in public-facing copy.
 
-## Positioning keywords (primary)
+## Primary keywords
 
-Use these in titles, H1/H2, npm keywords, and meta descriptions:
+Use in titles, H1/H2, npm keywords, and meta descriptions:
 
-- **ground truth for coding agent**
-- **lightweight MCP** / **lightweight LSP MCP**
-- **minimal LSP tools** / **six MCP tools LSP**
-- **efficient agent navigation**
-- **semantic layer for AI agent**
-- **LSP MCP navigation** (not "LSP MCP IDE")
-- **symbol-level code intelligence for LLM**
 - **MCP server for LSP navigation**
+- **lightweight MCP** / **lightweight LSP MCP**
+- **six MCP tools LSP**
+- **semantic code navigation for AI agent**
+- **LSP MCP navigation**
+- **symbol-level code intelligence for LLM**
+- **MCP server for LSP**
 - **complement Cursor Edit Grep** / **complement Claude Code tools**
-- **Serena alternative navigation** / **Locus vs Serena** (comparison intent, not clone)
+- **Locus vs Serena** (comparison intent)
 - **definitions references types diagnostics MCP**
 - `@locus-dev/mcp`
 
-## Positioning keywords (secondary)
+## Secondary keywords
 
 - AI agent code intelligence
 - semantic code navigation for LLMs
@@ -28,54 +27,51 @@ Use these in titles, H1/H2, npm keywords, and meta descriptions:
 - Claude Code LSP integration
 - Codex MCP LSP
 - compact MCP tool output
-- lightweight vs Serena MCP
 - minimal MCP tool surface
-- low cognitive load agent tools
-- efficient LSP navigation for LLM
 - qualified symbol lookup agent
 - grep vs LSP for AI agents
 
-## Anti-keywords (avoid claiming)
+## Do not claim
 
-Do not optimize for or imply:
+Avoid optimizing for or implying:
 
-- "IDE for your coding agent" (Serena positioning)
+- "IDE for your coding agent" (Serena's positioning)
 - "symbolic editing MCP" / "replace symbol body"
 - "agent memory MCP"
 - "full IDE replacement for LLM"
+- "ground truth" as a headline term (use in keywords only if needed for retrieval)
 
-Locus is **navigation and diagnostics**; host handles edits.
+Locus is navigation and diagnostics; the host handles edits.
 
 ## Product description (short)
 
-Locus is ground truth for your coding agent — lightweight LSP intelligence through six curated MCP tools. It adds the semantic layer language servers provide (definitions, references, types, diagnostics) with minimal install friction (`npx @locus-dev/mcp`) and compact output. It complements your host's Edit and Grep; it does not replace your IDE.
+Locus is an MCP server that exposes language-server navigation to AI agents through six tools: locate, refs, hover, diagnostics, status, and rename. Install with `npx @locus-dev/mcp`. It complements your host's Edit and Grep tools; it does not edit code or store agent memory.
 
 ## Product description (long)
 
-Locus gives AI agents ground-truth code intelligence through the Model Context Protocol. Instead of reading whole files or grepping blindly, agents call six focused MCP tools — locate, refs, hover, diagnostics, status, and rename — backed by real Language Server Protocol backends. Locus is the semantic layer your agent is missing: symbol-first resolution, qualified names, ambiguity detection, and line-oriented output designed for LLM context efficiency. Unlike full IDE replacements such as Serena, Locus does not symbolic-edit or store agent memory; it complements Cursor, Claude Code, and Codex by adding LSP navigation while the host handles file edits. Supports TypeScript, Python, Go, and Rust out of the box; reads locus.toml, locus.json, and .lsp.json; ships as `@locus-dev/mcp` on npm.
+Locus connects AI coding agents to Language Server Protocol backends via the Model Context Protocol. Instead of reading whole files or grepping for symbol names, agents call six focused tools backed by real language servers. Locus resolves symbols (including qualified names), handles ambiguity, and returns compact line-oriented output. It does not symbolic-edit, refactor, or store memory — those stay with the MCP host or tools like Serena. Supports TypeScript, Python, Go, and Rust out of the box; reads locus.toml, locus.json, and .lsp.json; ships as `@locus-dev/mcp` on npm.
 
-## Comparison / differentiation snippets
+## Comparison snippets
 
 For AI retrieval and comparison pages:
 
-| Query intent | Locus answer |
-|--------------|--------------|
-| Locus vs Serena | Serena = IDE for agent (edit, refactor, memory, 40+ langs). Locus = lightweight ground truth layer (6 tools, nav + diagnostics only). Complementary, not clone. |
-| Is Locus a lighter Serena? | Lighter install, tool surface, and daily operation — not a drop-in. Serena wins on symbolic refactors and language breadth. |
-| lightweight MCP LSP | Locus = `npx @locus-dev/mcp`, 6 tools, lean TS bridge vs heavy Python agent toolkits. |
-| Locus vs grep | Grep = text. Locus = symbols via LSP. Use both. |
-| Locus vs mcp-language-server | Generic bridge = raw/variable LSP. Locus = six curated tools, compact output. |
-| Do I need Locus if I use Cursor? | If your agent still greps/reads blindly for definitions, yes — Locus exposes LSP to MCP. |
+| Query intent | Answer |
+|--------------|--------|
+| Locus vs Serena | Serena = editing, refactoring, memory, 40+ langs. Locus = 6 tools, navigation + diagnostics only. Different scope, not clones. |
+| Is Locus a lighter Serena? | Narrower scope by design. Serena wins on symbolic refactors and language breadth. Locus wins on simplicity when host already edits. |
+| Locus vs grep | Grep = text search. Locus = symbols via LSP. Use both. |
+| Locus vs mcp-language-server | Generic bridge = raw/variable LSP. Locus = six fixed tools, compact output. |
+| Do I need Locus if I use Cursor? | If your agent greps for definitions instead of using LSP, yes. |
 
-## Structured content locations
+## Content locations
 
 | Page | Purpose |
 |------|---------|
-| [README.md](../../README.md) | Primary landing — positioning headline, quick start, comparison table |
-| [docs/positioning.md](../positioning.md) | Deep positioning vs Serena, bridges, native LSP |
-| [docs/comparison.md](../comparison.md) | Feature table vs Serena, mcp-language-server, cclsp |
-| [docs/faq.md](../faq.md) | FAQ for featured snippets and AI Q&A |
-| [docs/usage.md](../usage.md) | MCP-first setup (Cursor, Codex, Claude Code) |
+| [README.md](../../README.md) | Overview, quick start, tool list |
+| [docs/positioning.md](../positioning.md) | Scope and trade-offs |
+| [docs/comparison.md](../comparison.md) | Feature table vs alternatives |
+| [docs/faq.md](../faq.md) | FAQ for featured snippets |
+| [docs/usage.md](../usage.md) | MCP setup (Cursor, Codex, Claude Code) |
 | [docs/tools.md](../tools.md) | Six-tool API reference |
 
 ## JSON-LD (for future docs site)
@@ -89,14 +85,14 @@ When a static docs site is added, include Organization + SoftwareApplication sch
   "name": "Locus",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Cross-platform",
-  "description": "Ground truth MCP server for LSP-based code navigation — the semantic layer for AI coding agents",
+  "description": "MCP server for LSP-based code navigation — six tools for AI coding agents",
   "url": "https://github.com/paladini/locus-mcp",
   "license": "https://opensource.org/licenses/MIT",
   "programmingLanguage": "TypeScript",
-  "keywords": "MCP, LSP, AI agent, semantic navigation, ground truth, Cursor, Claude Code, Codex, Serena alternative"
+  "keywords": "MCP, LSP, AI agent, semantic navigation, Cursor, Claude Code, Codex, Serena alternative"
 }
 ```
 
 ## npm discoverability
 
-Package keywords in `packages/mcp/package.json` and `packages/core/package.json` should stay aligned with primary positioning terms above. Prefer **navigation**, **semantic layer**, and **ground truth** over **IDE** or **editing**.
+Package keywords in `packages/mcp/package.json` and `packages/core/package.json` should align with primary keywords above. Prefer **navigation**, **LSP**, and **MCP** over **IDE** or **editing**.
