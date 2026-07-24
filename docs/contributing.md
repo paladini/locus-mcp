@@ -16,7 +16,7 @@ Thank you for your interest in contributing. This document covers development se
 ### Clone and install
 
 ```bash
-git clone https://github.com/locus-dev/locus.git
+git clone https://github.com/paladini/locus-mcp.git
 cd locus
 npm install
 npm run build

@@ -11,7 +11,6 @@ import {
   configToToml,
   configToJson,
   generateDefaultConfig,
-  BUILTIN_SERVERS,
 } from "../src/index.js";
 
 describe("findConfigFile", () => {

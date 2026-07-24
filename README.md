@@ -20,7 +20,7 @@ Locus gives AI agents ground-truth semantic navigation — definitions, referenc
 ## Quick start
 
 ```bash
-git clone https://github.com/locus-dev/locus.git
+git clone https://github.com/paladini/locus-mcp.git
 cd locus
 npm install
 npm run build
