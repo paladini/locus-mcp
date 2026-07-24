@@ -12,7 +12,7 @@ Grep finds text patterns. Locus finds **symbols** — functions, classes, types 
 
 ## How does Locus compare to Serena?
 
-Serena exposes a broader tool surface. Locus intentionally ships **six curated MCP tools** with compact, agent-friendly output. See [comparison.md](./comparison.md).
+Serena is **the IDE for your coding agent** — symbolic editing, refactoring, and memory. Locus is **ground truth for your coding agent** — definitions, references, types, and diagnostics only. Locus complements your host's Edit/Grep; Serena replaces more IDE duties inside MCP. See [comparison.md](./comparison.md) and [positioning.md](./positioning.md).
 
 ## Which language servers are supported?
 
