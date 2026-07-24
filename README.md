@@ -7,9 +7,49 @@
 
 **Agent-first MCP server for Language Server Protocol (LSP) code intelligence.**
 
-Locus connects AI coding agents — Cursor, Claude Code, VS Code, and other MCP hosts — to language servers for ground-truth semantic navigation: definitions, references, types, diagnostics, and rename preview. Six curated MCP tools, a symbol-first API, and compact line-oriented output designed for LLM context efficiency.
+Locus connects AI coding agents — Cursor, Codex, Claude Code, and other MCP hosts — to language servers for ground-truth semantic navigation: definitions, references, types, diagnostics, and rename preview. Six curated MCP tools, a symbol-first API, and compact line-oriented output designed for LLM context efficiency.
 
 > Keywords: MCP server for LSP · AI agent code intelligence · semantic navigation · Cursor MCP · Claude Code LSP · `@locus-dev/mcp`
+
+## For agent users: configure MCP, not CLI
+
+**MCP is the product.** Your agent calls six MCP tools (`locate`, `refs`, `hover`, `diagnostics`, `status`, `rename`) — it does **not** run `locus locate` in a terminal.
+
+The CLI is how you **set up and launch** the MCP server:
+
+| Command | Purpose |
+|---------|---------|
+| `locus serve` | Starts the MCP server (stdio) — **this is what Cursor/Codex spawn** |
+| `locus init` | Generate project config (one-time setup) |
+| `locus check` | Verify language-server binaries |
+| `locus warm` | Pre-start language servers (optional) |
+
+**Full guide:** [docs/usage.md](docs/usage.md)
+
+### Cursor
+
+```json
+{
+  "mcpServers": {
+    "locus": {
+      "command": "npx",
+      "args": ["-y", "@locus-dev/mcp", "serve"],
+      "cwd": "/absolute/path/to/your/project"
+    }
+  }
+}
+```
+
+### Codex
+
+```toml
+[mcp_servers.locus]
+command = "npx"
+args = ["-y", "@locus-dev/mcp", "serve"]
+cwd = "/absolute/path/to/your/project"
+```
+
+Add to `~/.codex/config.toml` or `.codex/config.toml`. See [docs/usage.md](docs/usage.md) for step-by-step setup.
 
 ## What is Locus?
 
@@ -39,72 +79,21 @@ See the full [comparison guide](docs/comparison.md) vs Serena, mcp-language-serv
 
 ## Quick start
 
-### Install from npm
+1. **Configure MCP** in your agent host — see [docs/usage.md](docs/usage.md) (Cursor, Codex, Claude Code)
+2. **One-time project setup:**
 
 ```bash
-npm install -g @locus-dev/mcp
-# or run without install:
-npx @locus-dev/mcp --help
+npx locus init    # generate locus.toml + locus.json
+npx locus check   # verify language-server binaries
+npx locus warm    # optional: pre-start servers
 ```
 
-### From source
-
-```bash
-git clone https://github.com/paladini/locus-mcp.git
-cd locus-mcp
-npm install
-npm run build
-
-# Initialize config in your project
-npx locus init
-
-# Verify language server binaries
-npx locus check
-
-# Pre-warm servers before agent sessions
-npx locus warm
-```
+Your MCP host spawns `locus serve` automatically. You do not run it manually during agent sessions.
 
 ### Prerequisites
 
 - **Node.js 22+**
 - Language servers on your `PATH` (see [Getting Started](docs/getting-started.md#installing-language-servers))
-
-## MCP configuration
-
-### Cursor
-
-Add to `.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "locus": {
-      "command": "npx",
-      "args": ["-y", "@locus-dev/mcp", "serve"],
-      "cwd": "/absolute/path/to/your/project"
-    }
-  }
-}
-```
-
-Local development:
-
-```json
-{
-  "mcpServers": {
-    "locus": {
-      "command": "node",
-      "args": ["packages/mcp/dist/bin.js", "serve"],
-      "cwd": "/absolute/path/to/locus-mcp"
-    }
-  }
-}
-```
-
-### Claude Code
-
-Use the same MCP block in Claude Code settings. Set `cwd` to the project root you want analyzed.
 
 ## Tools
 
@@ -174,6 +163,7 @@ More answers: [docs/faq.md](docs/faq.md)
 
 | Guide | Description |
 |-------|-------------|
+| [**Usage (MCP-first)**](docs/usage.md) | **Primary guide** — MCP vs CLI, host setup, agent workflows |
 | [Getting Started](docs/getting-started.md) | Install, prerequisites, first MCP setup |
 | [Configuration](docs/configuration.md) | locus.toml, .lsp.json, language servers |
 | [Tools](docs/tools.md) | All six MCP tools with examples |

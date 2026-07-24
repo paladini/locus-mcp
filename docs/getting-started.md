@@ -1,6 +1,53 @@
 # Getting Started
 
-Locus is an agent-first MCP server that exposes language-server intelligence through six focused tools. This guide covers installation, prerequisites, and your first MCP setup.
+Locus is an **MCP server** that exposes language-server intelligence through six focused tools. Your AI agent calls those tools — not the CLI. This guide gets you from zero to a working MCP setup.
+
+> **Start here for the full picture:** [Usage Guide (MCP-first)](./usage.md)
+
+## 1. Configure MCP in your agent host
+
+Pick your host and add Locus. The host spawns `locus serve` over stdio; the agent then calls MCP tools like `locate` and `refs`.
+
+| Host | Config file | Guide section |
+|------|-------------|---------------|
+| **Cursor** | `.cursor/mcp.json` | [usage.md — Cursor](./usage.md#setup-cursor) |
+| **Codex** | `~/.codex/config.toml` or `.codex/config.toml` | [usage.md — Codex](./usage.md#setup-codex) |
+| **Claude Code** | MCP settings | [usage.md — Claude Code](./usage.md#setup-claude-code-brief) |
+
+**Cursor (published package):**
+
+```json
+{
+  "mcpServers": {
+    "locus": {
+      "command": "npx",
+      "args": ["-y", "@locus-dev/mcp", "serve"],
+      "cwd": "/absolute/path/to/your/project"
+    }
+  }
+}
+```
+
+**Codex:**
+
+```toml
+[mcp_servers.locus]
+command = "npx"
+args = ["-y", "@locus-dev/mcp", "serve"]
+cwd = "/absolute/path/to/your/project"
+```
+
+Reload MCP servers after saving config.
+
+## 2. One-time project setup (CLI)
+
+Run these in your **project root** — not in agent terminals during normal use:
+
+```bash
+npx locus init    # create locus.toml + locus.json
+npx locus check   # verify language-server binaries
+npx locus warm    # optional: pre-start servers before heavy sessions
+```
 
 ## Prerequisites
 
@@ -8,7 +55,7 @@ Locus is an agent-first MCP server that exposes language-server intelligence thr
 |-------------|---------|-------|
 | Node.js | 22+ | Required for the MCP server and CLI |
 | npm | 10+ | Bundled with Node.js |
-| Language servers | Per language | See [Configuration](./configuration.md#language-servers) |
+| Language servers | Per language | See below |
 
 ### Installing language servers
 
@@ -28,102 +75,48 @@ go install golang.org/x/tools/gopls@latest
 rustup component add rust-analyzer
 ```
 
-Verify installations with:
+Verify installations:
 
 ```bash
 npx locus check
 ```
 
-## Installation
+## Installation options
+
+### From npm (recommended)
+
+```bash
+npm install -g @locus-dev/mcp
+# or run without install:
+npx @locus-dev/mcp --help
+```
 
 ### From source (development)
 
 ```bash
 git clone https://github.com/paladini/locus-mcp.git
-cd locus
+cd locus-mcp
 npm install
 npm run build
 ```
 
-Use the local CLI:
+Local MCP config uses `node packages/mcp/dist/bin.js serve` — see [usage.md](./usage.md).
 
-```bash
-node packages/mcp/dist/bin.js --help
-```
+## Verify everything works
 
-### From npm (when published)
+1. **CLI check:** `npx locus check` — all needed binaries found?
+2. **Optional warm-up:** `npx locus warm` — pre-start language servers
+3. **Agent smoke test:** In your agent, ask it to call the Locus `status` MCP tool
 
-```bash
-npm install -g @locus-dev/mcp
-```
+Example prompt:
 
-## Initialize a project
+> Call the Locus MCP tool `status` and tell me which language servers are ready.
 
-From your project root:
-
-```bash
-npx locus init
-```
-
-This creates `locus.toml` and `locus.json` with detected languages and default server entries.
-
-## First MCP setup
-
-### Cursor
-
-Add to `.cursor/mcp.json` in your project (or global Cursor MCP settings):
-
-```json
-{
-  "mcpServers": {
-    "locus": {
-      "command": "npx",
-      "args": ["-y", "@locus-dev/mcp", "serve"],
-      "cwd": "/absolute/path/to/your/project"
-    }
-  }
-}
-```
-
-For local development:
-
-```json
-{
-  "mcpServers": {
-    "locus": {
-      "command": "node",
-      "args": ["packages/mcp/dist/bin.js", "serve"],
-      "cwd": "/absolute/path/to/locus/repo"
-    }
-  }
-}
-```
-
-Restart Cursor (or reload MCP servers) after saving the config.
-
-### Claude Code
-
-Add the same block to your Claude Code MCP settings. Set `cwd` to the project you want Locus to analyze.
-
-## Warm-up and smoke test
-
-Pre-warm language servers before heavy agent sessions:
-
-```bash
-npx locus warm
-```
-
-Quick sanity check:
-
-```bash
-npx locus check    # binaries installed?
-npx locus warm     # servers start?
-```
-
-In your agent, call the `status` tool to confirm readiness before using `locate`, `refs`, or `hover`.
+If `status` returns readiness info, MCP is wired correctly. The agent should use tools like `locate` and `refs` — not shell commands.
 
 ## Next steps
 
-- [Configuration](./configuration.md) — customize `locus.toml`, `.lsp.json` compat, server overrides
+- [Usage Guide](./usage.md) — MCP vs CLI, agent workflows, troubleshooting
+- [Configuration](./configuration.md) — customize `locus.toml`, `.lsp.json`, server overrides
 - [Tools reference](./tools.md) — all six MCP tools with examples
 - [Contributing](./contributing.md) — development setup and test commands

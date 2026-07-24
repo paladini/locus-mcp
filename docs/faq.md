@@ -28,7 +28,7 @@ Six tools: `locate`, `refs`, `hover`, `diagnostics`, `status`, `rename`. Full re
 
 ## Can I use Locus with Cursor or Claude Code?
 
-Yes. Add Locus to your MCP config with `npx @locus-dev/mcp serve` and set `cwd` to your project root. See [getting-started.md](./getting-started.md).
+Yes. Add Locus to your MCP config with `npx @locus-dev/mcp serve` and set `cwd` to your project root. See [usage.md](./usage.md) for Cursor, Codex, and Claude Code setup.
 
 ## What config files does Locus read?
 
