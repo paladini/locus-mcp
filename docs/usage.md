@@ -21,7 +21,7 @@ flowchart LR
 | Who | Does what |
 |-----|-----------|
 | **You** | Run `init` and `check` once; paste MCP config; reload your agent |
-| **Your agent host** | Spawns `npx @locus-dev/mcp serve` automatically |
+| **Your agent host** | Spawns `npx @paladini/locus-mcp serve` automatically |
 | **Your agent** | Calls MCP tools (`locate`, `refs`, …) — never shell CLI commands |
 | **Locus** | Translates tool calls into language-server requests |
 
@@ -50,8 +50,8 @@ Full parameters and examples: [tools.md](./tools.md)
 2. Language servers for your project's languages ([getting started — language servers](./getting-started.md#step-2-install-language-servers))
 3. In your project root:
    ```bash
-   npx @locus-dev/mcp init
-   npx @locus-dev/mcp check
+   npx @paladini/locus-mcp init
+   npx @paladini/locus-mcp check
    ```
 
 ### Cursor
@@ -63,7 +63,7 @@ Full parameters and examples: [tools.md](./tools.md)
   "mcpServers": {
     "locus": {
       "command": "npx",
-      "args": ["-y", "@locus-dev/mcp", "serve"],
+      "args": ["-y", "@paladini/locus-mcp", "serve"],
       "cwd": "/absolute/path/to/your/project"
     }
   }
@@ -98,7 +98,7 @@ Codex reads MCP config from `~/.codex/config.toml` (global) or `.codex/config.to
 ```toml
 [mcp_servers.locus]
 command = "npx"
-args = ["-y", "@locus-dev/mcp", "serve"]
+args = ["-y", "@paladini/locus-mcp", "serve"]
 cwd = "/absolute/path/to/your/project"
 ```
 
@@ -109,7 +109,7 @@ If language servers are slow to start, increase the timeout:
 ```toml
 [mcp_servers.locus]
 command = "npx"
-args = ["-y", "@locus-dev/mcp", "serve"]
+args = ["-y", "@paladini/locus-mcp", "serve"]
 cwd = "/absolute/path/to/your/project"
 startup_timeout_sec = 30
 ```
@@ -127,7 +127,7 @@ Add the same JSON block as Cursor to Claude Code MCP settings:
   "mcpServers": {
     "locus": {
       "command": "npx",
-      "args": ["-y", "@locus-dev/mcp", "serve"],
+      "args": ["-y", "@paladini/locus-mcp", "serve"],
       "cwd": "/absolute/path/to/your/project"
     }
   }
@@ -168,7 +168,7 @@ Grep finds text. Locus finds **symbols** — functions, classes, methods — wit
 
 **What the agent should do:** Call `diagnostics` on changed files before moving on.
 
-Optional: install the Cursor post-edit hook from `@locus-dev/adapters` to run diagnostics automatically after `Write`/`Edit` tool use.
+Optional: install the Cursor post-edit hook from `@paladini/adapters` to run diagnostics automatically after `Write`/`Edit` tool use.
 
 ### On session start (use `status`)
 
@@ -194,10 +194,10 @@ Optional: install the Cursor post-edit hook from `@locus-dev/adapters` to run di
 ## CLI commands (for you, not your agent)
 
 ```bash
-npx @locus-dev/mcp init    # Create config in your project (once)
-npx @locus-dev/mcp check   # Verify language servers are installed
-npx @locus-dev/mcp warm    # Pre-start servers (optional)
-npx @locus-dev/mcp serve   # Started by your MCP host — not manually
+npx @paladini/locus-mcp init    # Create config in your project (once)
+npx @paladini/locus-mcp check   # Verify language servers are installed
+npx @paladini/locus-mcp warm    # Pre-start servers (optional)
+npx @paladini/locus-mcp serve   # Started by your MCP host — not manually
 ```
 
 ---
@@ -207,7 +207,7 @@ npx @locus-dev/mcp serve   # Started by your MCP host — not manually
 ### Run `check` first
 
 ```bash
-npx @locus-dev/mcp check
+npx @paladini/locus-mcp check
 ```
 
 Fix any `MISSING` entries before expecting useful agent results.
@@ -217,7 +217,7 @@ Fix any `MISSING` entries before expecting useful agent results.
 The language server is still booting. Wait a few seconds, call `status`, or run:
 
 ```bash
-npx @locus-dev/mcp warm
+npx @paladini/locus-mcp warm
 ```
 
 ### MCP server not appearing

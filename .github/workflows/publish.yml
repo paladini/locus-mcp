@@ -4,65 +4,64 @@ on:
   push:
     tags:
       - "v*"
-  release:
-    types: [published]
-  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  id-token: write
+  packages: write
 
 jobs:
-  npm:
+  publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    strategy:
-      matrix:
-        package: ["@locus-dev/core", "@locus-dev/mcp"]
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
 
-      - run: npm install -g npm@latest
+      - name: Install latest npm
+        run: npm install -g npm@latest
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-      - run: npm run build
+      - name: Build
+        run: npm run build
 
-      - run: npm test
+      - name: Test
+        run: npm test
 
-      - name: Publish ${{ matrix.package }} to npmjs.org
-        run: npm publish -w ${{ matrix.package }} --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Pack MCPB bundle
+        run: npm run pack:mcpb
 
-  github-packages:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    strategy:
-      matrix:
-        package: ["@locus-dev/core", "@locus-dev/mcp"]
-    steps:
-      - uses: actions/checkout@v4
+      - name: Publish @paladini/locus-core to npm
+        run: npm publish -w @paladini/locus-core --provenance --access public
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: https://npm.pkg.github.com
-          scope: "@locus-dev"
+      - name: Publish @paladini/locus-mcp to npm
+        run: npm publish -w @paladini/locus-mcp --provenance --access public
 
-      - run: npm ci
-
-      - run: npm run build
-
-      - name: Publish ${{ matrix.package }} to GitHub Packages
-        run: npm publish -w ${{ matrix.package }}
+      - name: Publish to GitHub Packages
+        run: |
+          npm publish -w @paladini/locus-core --registry https://npm.pkg.github.com
+          npm publish -w @paladini/locus-mcp --registry https://npm.pkg.github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install mcp-publisher
+        run: |
+          curl -sL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+          sudo mv mcp-publisher /usr/local/bin/
+
+      - name: Publish to MCP Registry
+        run: |
+          mcp-publisher login github-oidc
+          mcp-publisher publish
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: locus-mcp.mcpb
+          generate_release_notes: true

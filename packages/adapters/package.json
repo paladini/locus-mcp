@@ -1,5 +1,5 @@
 {
-  "name": "@locus-dev/adapters",
+  "name": "@paladini/adapters",
   "version": "0.1.0",
   "description": "Cursor hooks and Claude Code skill adapters for Locus",
   "license": "MIT",

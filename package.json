@@ -1,6 +1,6 @@
 {
   "name": "locus",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "Agent-first MCP server for LSP-based code intelligence",
   "license": "MIT",
@@ -22,7 +22,8 @@
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "pack:mcpb": "node scripts/pack-mcpb.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

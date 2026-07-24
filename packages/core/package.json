@@ -1,6 +1,6 @@
 {
-  "name": "@locus-dev/core",
-  "version": "0.1.1",
+  "name": "@paladini/locus-core",
+  "version": "0.1.2",
   "description": "LSP client, registry, symbol layer, and format utilities for Locus — MCP server for LSP code intelligence",
   "license": "MIT",
   "type": "module",

@@ -61,8 +61,8 @@ Only install what you need. You can add more later.
 Run these in your **project root** (the folder with your code):
 
 ```bash
-npx @locus-dev/mcp init
-npx @locus-dev/mcp check
+npx @paladini/locus-mcp init
+npx @paladini/locus-mcp check
 ```
 
 - `init` creates config files (`locus.toml`, `locus.json`) so Locus knows your project root and languages.
@@ -80,7 +80,7 @@ If something shows `MISSING`, install that language server and run `check` again
 Optional — pre-start servers before a long agent session:
 
 ```bash
-npx @locus-dev/mcp warm
+npx @paladini/locus-mcp warm
 ```
 
 ## Step 4: Add Locus to your agent
@@ -94,7 +94,7 @@ Pick your tool and paste the config. Replace `/absolute/path/to/your/project` wi
   "mcpServers": {
     "locus": {
       "command": "npx",
-      "args": ["-y", "@locus-dev/mcp", "serve"],
+      "args": ["-y", "@paladini/locus-mcp", "serve"],
       "cwd": "/absolute/path/to/your/project"
     }
   }
@@ -106,7 +106,7 @@ Pick your tool and paste the config. Replace `/absolute/path/to/your/project` wi
 ```toml
 [mcp_servers.locus]
 command = "npx"
-args = ["-y", "@locus-dev/mcp", "serve"]
+args = ["-y", "@paladini/locus-mcp", "serve"]
 cwd = "/absolute/path/to/your/project"
 ```
 
@@ -134,7 +134,7 @@ Your agent should call the `locate` tool — not run shell commands like `grep` 
 |---------|-----|
 | `check` reports MISSING binary | Install that language server; ensure it is on your PATH |
 | Agent uses grep instead of Locus | Remind it: *"Use the Locus MCP tool `locate`, not grep."* |
-| `server_starting` in tool output | Wait a few seconds and retry, or run `npx @locus-dev/mcp warm` |
+| `server_starting` in tool output | Wait a few seconds and retry, or run `npx @paladini/locus-mcp warm` |
 | MCP server not listed in host | Confirm `cwd` is an absolute path to your project root; reload MCP |
 
 ## Installation options
@@ -142,13 +142,13 @@ Your agent should call the `locate` tool — not run shell commands like `grep` 
 **Recommended — no global install:**
 
 ```bash
-npx @locus-dev/mcp --help
+npx @paladini/locus-mcp --help
 ```
 
 **Global install:**
 
 ```bash
-npm install -g @locus-dev/mcp
+npm install -g @paladini/locus-mcp
 ```
 
 **From source (contributors):**

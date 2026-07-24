@@ -1,5 +1,5 @@
-import type { LocusResult } from "@locus-dev/core";
-import type { LspClient } from "@locus-dev/core";
+import type { LocusResult } from "@paladini/locus-core";
+import type { LspClient } from "@paladini/locus-core";
 
 export function handleLspError(err: unknown): LocusResult {
   const message = err instanceof Error ? err.message : String(err);

@@ -7,7 +7,7 @@ import {
   configToToml,
   configToJson,
   detectProjectLanguages,
-} from "@locus-dev/core";
+} from "@paladini/locus-core";
 import { createLocusContext, shutdownContext } from "./context.js";
 import { runMcpServer } from "./server.js";
 

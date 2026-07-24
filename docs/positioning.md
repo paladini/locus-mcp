@@ -30,7 +30,7 @@ Six MCP tools backed by language servers (the same programs VS Code and Cursor u
 | `status` | Check whether language servers are ready |
 | `rename` | Preview rename impact (your agent applies the edits) |
 
-Install once with `npx @locus-dev/mcp`. Your agent host spawns the server; you configure MCP once per project.
+Install once with `npx @paladini/locus-mcp`. Your agent host spawns the server; you configure MCP once per project.
 
 ## Locus vs Serena (honest summary)
 
@@ -39,7 +39,7 @@ Both connect agents to language servers. The difference is scope:
 | | Locus | Serena |
 |---|-------|--------|
 | Best for | Navigation + diagnostics on top of your host | Editing, refactoring, and memory inside MCP |
-| Install | `npx @locus-dev/mcp` | `uv tool install serena-agent` |
+| Install | `npx @paladini/locus-mcp` | `uv tool install serena-agent` |
 | MCP tools | 6 | Many |
 | Symbolic editing | No — use host Edit | Yes |
 | Agent memory | No | Yes |

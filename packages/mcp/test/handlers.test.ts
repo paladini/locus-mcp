@@ -1,8 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { resolve } from "node:path";
-import type { LspClient } from "@locus-dev/core";
-import { SymbolResolver } from "@locus-dev/core";
+import type { LspClient } from "@paladini/locus-core";
+import { SymbolResolver } from "@paladini/locus-core";
 import type { LocusServerContext } from "../src/context.js";
 import { handleLocate } from "../src/tools/locate.js";
 import { handleRefs } from "../src/tools/refs.js";
@@ -10,7 +10,7 @@ import { handleHover } from "../src/tools/hover.js";
 import { handleDiagnostics } from "../src/tools/diagnostics.js";
 import { handleStatus } from "../src/tools/status.js";
 import { handleRename } from "../src/tools/rename.js";
-import { filePathToUri } from "@locus-dev/core";
+import { filePathToUri } from "@paladini/locus-core";
 
 const ROOT = resolve("/proj");
 

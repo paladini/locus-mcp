@@ -4,7 +4,7 @@ import {
   formatSymbolLocation,
   okResult,
   errorResult,
-} from "@locus-dev/core";
+} from "@paladini/locus-core";
 import type { LocusServerContext } from "../context.js";
 import { handleLspError } from "./helpers.js";
 

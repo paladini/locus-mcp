@@ -1,5 +1,5 @@
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { formatStatus } from "@locus-dev/core";
+import { formatStatus } from "@paladini/locus-core";
 import type { LocusServerContext } from "../context.js";
 
 export const statusTool = {

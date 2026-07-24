@@ -38,7 +38,7 @@ Not a drop-in substitute. Different scope, different install:
 
 | | Locus | Serena |
 |---|-------|--------|
-| Install | `npx @locus-dev/mcp` | `uv tool install serena-agent` |
+| Install | `npx @paladini/locus-mcp` | `uv tool install serena-agent` |
 | Tools | 6 (navigation + diagnostics) | Many (edit, memory, refactor, …) |
 | Edits code | No — host Edit tool | Yes, inside MCP |
 | Languages (built-in) | TS/JS, Python, Go, Rust | 40+ adapters |
@@ -49,7 +49,7 @@ Built-in adapters: TypeScript/JavaScript (`typescript-language-server`), Python 
 
 ## Do I need language servers installed?
 
-Yes. Locus asks language servers for answers — it does not parse code itself. Run `npx @locus-dev/mcp check` in your project to verify binaries are on your PATH.
+Yes. Locus asks language servers for answers — it does not parse code itself. Run `npx @paladini/locus-mcp check` in your project to verify binaries are on your PATH.
 
 ## What MCP tools does Locus expose?
 
@@ -57,7 +57,7 @@ Six tools: `locate`, `refs`, `hover`, `diagnostics`, `status`, `rename`. Full re
 
 ## Can I use Locus with Cursor, Codex, or Claude Code?
 
-Yes. Add Locus to your MCP config with `npx @locus-dev/mcp serve` and set `cwd` to your project root. Step-by-step: [usage.md](./usage.md).
+Yes. Add Locus to your MCP config with `npx @paladini/locus-mcp serve` and set `cwd` to your project root. Step-by-step: [usage.md](./usage.md).
 
 ## What config files does Locus read?
 
@@ -69,7 +69,7 @@ In order of discovery (walks up from cwd):
 
 ## Is Locus published on npm?
 
-Yes: `@locus-dev/mcp` (CLI + MCP server) and `@locus-dev/core` (library). See [publishing.md](./publishing.md).
+Yes: `@paladini/locus-mcp` (CLI + MCP server) and `@paladini/locus-core` (library). See [publishing.md](./publishing.md).
 
 ## How do I contribute?
 

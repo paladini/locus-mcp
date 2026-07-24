@@ -1,5 +1,5 @@
-import { loadConfig, createRegistry, LspManager, SymbolResolver } from "@locus-dev/core";
-import type { LanguageServerConfig } from "@locus-dev/core";
+import { loadConfig, createRegistry, LspManager, SymbolResolver } from "@paladini/locus-core";
+import type { LanguageServerConfig } from "@paladini/locus-core";
 
 export interface LocusServerContext {
   rootPath: string;

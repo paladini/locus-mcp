@@ -1,6 +1,6 @@
 # Locus
 
-[![npm version](https://img.shields.io/npm/v/@locus-dev/mcp)](https://www.npmjs.com/package/@locus-dev/mcp)
+[![npm version](https://img.shields.io/npm/v/@paladini/locus-mcp)](https://www.npmjs.com/package/@paladini/locus-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/paladini/locus-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/paladini/locus-mcp/actions/workflows/ci.yml)
@@ -27,8 +27,8 @@ It is **not** for people who want symbolic editing, agent memory, or a full refa
 1. **Install a language server** (if you do not have one yet) — for TypeScript/JavaScript: `npm install -g typescript-language-server typescript`. See [Installing language servers](docs/getting-started.md#step-2-install-language-servers) for Python, Go, and Rust.
 2. **Run one-time setup** in your project folder:
    ```bash
-   npx @locus-dev/mcp init
-   npx @locus-dev/mcp check
+   npx @paladini/locus-mcp init
+   npx @paladini/locus-mcp check
    ```
 3. **Add Locus to your agent's MCP config** — MCP is how AI hosts call helper tools like Locus; copy a block from [Copy-paste configs](#copy-paste-configs) below and set `cwd` to your project's absolute path.
 4. **Reload MCP** — restart Cursor, reload Codex, or reopen Claude Code so the new server appears.
@@ -49,7 +49,7 @@ Create or edit `.cursor/mcp.json` in your project (or global Cursor MCP settings
   "mcpServers": {
     "locus": {
       "command": "npx",
-      "args": ["-y", "@locus-dev/mcp", "serve"],
+      "args": ["-y", "@paladini/locus-mcp", "serve"],
       "cwd": "/absolute/path/to/your/project"
     }
   }
@@ -63,7 +63,7 @@ Add to `~/.codex/config.toml` (global) or `.codex/config.toml` (project):
 ```toml
 [mcp_servers.locus]
 command = "npx"
-args = ["-y", "@locus-dev/mcp", "serve"]
+args = ["-y", "@paladini/locus-mcp", "serve"]
 cwd = "/absolute/path/to/your/project"
 ```
 
@@ -78,7 +78,7 @@ Add to Claude Code MCP settings:
   "mcpServers": {
     "locus": {
       "command": "npx",
-      "args": ["-y", "@locus-dev/mcp", "serve"],
+      "args": ["-y", "@paladini/locus-mcp", "serve"],
       "cwd": "/absolute/path/to/your/project"
     }
   }

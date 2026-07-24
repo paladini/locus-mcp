@@ -1,0 +1,35 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/mcpb/main/schemas/mcpb-manifest-v0.4.schema.json",
+  "manifest_version": "0.4",
+  "name": "locus-mcp",
+  "display_name": "Locus — LSP Code Intelligence",
+  "version": "0.1.2",
+  "description": "Lightweight MCP server for LSP code intelligence — symbol lookup, references, types, and diagnostics for AI coding agents.",
+  "author": {
+    "name": "Fernando Paladini",
+    "url": "https://github.com/paladini"
+  },
+  "homepage": "https://github.com/paladini/locus-mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paladini/locus-mcp"
+  },
+  "license": "MIT",
+  "keywords": ["mcp", "lsp", "code-intelligence", "symbols", "typescript", "cursor", "claude"],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/bin.js",
+    "mcp_config": {
+      "command": "npx",
+      "args": ["-y", "@paladini/locus-mcp", "serve"]
+    }
+  },
+  "tools_generated": true,
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=22.0.0"
+    }
+  }
+}

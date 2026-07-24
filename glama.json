@@ -1,0 +1,8 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": ["paladini"],
+  "displayName": "Locus — LSP Code Intelligence",
+  "description": "Lightweight MCP server for LSP code intelligence — symbol lookup, references, types, and diagnostics for AI coding agents.",
+  "category": "developer-tools",
+  "tags": ["mcp", "lsp", "code-intelligence", "symbols", "typescript", "cursor", "claude"]
+}

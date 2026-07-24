@@ -4,7 +4,7 @@ import {
   formatRenamePreview,
   okResult,
   errorResult,
-} from "@locus-dev/core";
+} from "@paladini/locus-core";
 import type { LocusServerContext } from "../context.js";
 import { getClientForSymbol, handleLspError, parsePosition } from "./helpers.js";
 

@@ -24,7 +24,7 @@ Add to Claude Code settings:
   "mcpServers": {
     "locus": {
       "command": "npx",
-      "args": ["-y", "@locus-dev/mcp", "serve"],
+      "args": ["-y", "@paladini/locus-mcp", "serve"],
       "cwd": "/path/to/project"
     }
   }

@@ -7,7 +7,7 @@ A factual comparison to help you pick the right MCP + code-intelligence setup fo
 | | **Locus** | **Serena** | **mcp-language-server** | **cclsp** |
 |---|-----------|------------|-------------------------|-----------|
 | Primary goal | Semantic navigation for agents | Full agent IDE (edit + refactor + memory) | Generic LSP-over-MCP | Host-native LSP for Claude Code |
-| Install | `npx @locus-dev/mcp` (Node.js 22+) | `uv tool install serena-agent` (Python) | Community packages | Host plugin |
+| Install | `npx @paladini/locus-mcp` (Node.js 22+) | `uv tool install serena-agent` (Python) | Community packages | Host plugin |
 | MCP tools | 6 fixed tools | Many | Variable / generic | Host-specific |
 | Edits code | No — your agent edits | Yes — symbolic editing tools | Depends | Limited |
 | Agent memory | No | Yes | No | No |

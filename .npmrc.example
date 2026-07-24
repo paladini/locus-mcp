@@ -1,7 +1,7 @@
-# Install @locus-dev packages from GitHub Packages
+# Install @paladini packages from GitHub Packages
 # Copy to ~/.npmrc or project .npmrc
 
-@locus-dev:registry=https://npm.pkg.github.com
+@paladini:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 
 # Replace ${GITHUB_TOKEN} with a GitHub PAT that has read:packages scope.
@@ -11,4 +11,4 @@
 # registry=https://registry.npmjs.org/
 
 # Example install:
-#   npm install @locus-dev/mcp @locus-dev/core
+#   npm install @paladini/locus-mcp @paladini/locus-core

@@ -6,8 +6,8 @@ import {
   formatWorkspaceDiagnostics,
   okResult,
   errorResult,
-} from "@locus-dev/core";
-import { filePathToUri } from "@locus-dev/core";
+} from "@paladini/locus-core";
+import { filePathToUri } from "@paladini/locus-core";
 import type { LocusServerContext } from "../context.js";
 import { getClientForSymbol, handleLspError } from "./helpers.js";
 
@@ -51,7 +51,7 @@ export async function handleDiagnostics(ctx: LocusServerContext, args: unknown):
   }
 
   // Workspace diagnostics from all active clients
-  const byFile = new Map<string, import("@locus-dev/core").Diagnostic[]>();
+  const byFile = new Map<string, import("@paladini/locus-core").Diagnostic[]>();
 
   for (const config of ctx.configs) {
     const dummy = resolve(ctx.rootPath, `dummy${config.extensions[0]}`);

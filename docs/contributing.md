@@ -25,8 +25,8 @@ npm run build
 ### Project structure
 
 ```
-packages/core/      @locus-dev/core — LSP client, registry, symbols, format
-packages/mcp/       @locus-dev/mcp — MCP server + CLI (locus binary)
+packages/core/      @paladini/locus-core — LSP client, registry, symbols, format
+packages/mcp/       @paladini/locus-mcp — MCP server + CLI (locus binary)
 packages/adapters/  Cursor hooks + Claude skill stubs
 evals/fixtures/     Integration test fixtures (TypeScript, Python)
 docs/               User and contributor documentation
@@ -44,8 +44,8 @@ docs/               User and contributor documentation
 ### Package-level tests
 
 ```bash
-npm run test -w @locus-dev/core
-npm run test -w @locus-dev/mcp
+npm run test -w @paladini/locus-core
+npm run test -w @paladini/locus-mcp
 ```
 
 ### CLI during development

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { formatHover, okResult, errorResult } from "@locus-dev/core";
+import { formatHover, okResult, errorResult } from "@paladini/locus-core";
 import type { LocusServerContext } from "../context.js";
 import { getClientForSymbol, handleLspError, parsePosition } from "./helpers.js";
 
