@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "node ${LOCUS_HOOK:-./node_modules/@locus-dev/adapters/cursor/post-edit.js} --cwd ${WORKSPACE_ROOT}"
+      }
+    ]
+  }
+}

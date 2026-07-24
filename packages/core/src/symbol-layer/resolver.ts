@@ -1,0 +1,160 @@
+import { readFileSync } from "node:fs";
+import type { SymbolInformation } from "../lsp-client/types.js";
+import { uriToFilePath } from "../lsp-client/connection.js";
+import type { LspClient } from "../lsp-client/client.js";
+import { relativePath } from "../lsp-client/client.js";
+
+export interface ResolvedSymbol {
+  name: string;
+  qualifiedName: string;
+  kind: number;
+  filePath: string;
+  relativePath: string;
+  line: number;
+  character: number;
+  containerName?: string;
+}
+
+export interface SymbolResolveResult {
+  status: "ok" | "no_results" | "ambiguous_symbol";
+  symbols: ResolvedSymbol[];
+  message?: string;
+}
+
+export interface SymbolResolverOptions {
+  rootPath: string;
+  fuzzy?: boolean;
+}
+
+export class SymbolResolver {
+  constructor(private readonly options: SymbolResolverOptions) {}
+
+  async findByName(client: LspClient, query: string): Promise<SymbolResolveResult> {
+    const trimmed = query.trim();
+    if (!trimmed) {
+      return { status: "no_results", symbols: [], message: "Empty query" };
+    }
+
+    const workspaceSymbols = await client.workspaceSymbol(trimmed);
+    let candidates = workspaceSymbols.map((s) => toResolvedSymbol(s, this.options.rootPath));
+
+    if (candidates.length === 0) {
+      candidates = await this.fuzzySearch(client, trimmed);
+    }
+
+    candidates = this.rankByQuery(candidates, trimmed);
+
+    if (candidates.length === 0) {
+      return { status: "no_results", symbols: [], message: `No symbols matching "${trimmed}"` };
+    }
+
+    const exact = candidates.filter(
+      (c) => c.qualifiedName === trimmed || c.name === trimmed || c.qualifiedName.endsWith(`.${trimmed}`),
+    );
+
+    if (exact.length === 1) {
+      return { status: "ok", symbols: exact };
+    }
+
+    if (exact.length > 1) {
+      return {
+        status: "ambiguous_symbol",
+        symbols: exact.slice(0, 10),
+        message: `Multiple symbols match "${trimmed}"`,
+      };
+    }
+
+    if (candidates.length === 1) {
+      return { status: "ok", symbols: [candidates[0]!] };
+    }
+
+    const topScore = scoreSymbol(candidates[0]!, trimmed);
+    const closeMatches = candidates.filter((c) => scoreSymbol(c, trimmed) >= topScore - 2);
+
+    if (closeMatches.length > 1) {
+      return {
+        status: "ambiguous_symbol",
+        symbols: closeMatches.slice(0, 10),
+        message: `Multiple symbols match "${trimmed}"`,
+      };
+    }
+
+    return { status: "ok", symbols: [candidates[0]!] };
+  }
+
+  async findAtPosition(
+    client: LspClient,
+    filePath: string,
+  ): Promise<ResolvedSymbol | undefined> {
+    const symbols = await client.documentSymbol(filePath);
+    if (symbols.length === 0) return undefined;
+
+    const resolved = symbols.map((s) => toResolvedSymbol(s, this.options.rootPath));
+    return resolved[0];
+  }
+
+  parseQualifiedName(name: string): { container?: string; member: string } {
+    const parts = name.split(".");
+    if (parts.length === 1) {
+      return { member: parts[0]! };
+    }
+    return {
+      container: parts.slice(0, -1).join("."),
+      member: parts[parts.length - 1]!,
+    };
+  }
+
+  private async fuzzySearch(client: LspClient, query: string): Promise<ResolvedSymbol[]> {
+    const { member } = this.parseQualifiedName(query);
+    const partial = await client.workspaceSymbol(member);
+    return partial.map((s) => toResolvedSymbol(s, this.options.rootPath));
+  }
+
+  private rankByQuery(symbols: ResolvedSymbol[], query: string): ResolvedSymbol[] {
+    return [...symbols].sort((a, b) => scoreSymbol(b, query) - scoreSymbol(a, query));
+  }
+}
+
+function toResolvedSymbol(symbol: SymbolInformation, rootPath: string): ResolvedSymbol {
+  const filePath = uriToFilePath(symbol.location.uri);
+  const qualifiedName = symbol.containerName ? `${symbol.containerName}.${symbol.name}` : symbol.name;
+
+  return {
+    name: symbol.name,
+    qualifiedName,
+    kind: symbol.kind,
+    filePath,
+    relativePath: relativePath(rootPath, symbol.location.uri),
+    line: symbol.location.range.start.line,
+    character: symbol.location.range.start.character,
+    containerName: symbol.containerName,
+  };
+}
+
+function scoreSymbol(symbol: ResolvedSymbol, query: string): number {
+  let score = 0;
+  const lowerQuery = query.toLowerCase();
+  const lowerName = symbol.name.toLowerCase();
+  const lowerQualified = symbol.qualifiedName.toLowerCase();
+
+  if (symbol.qualifiedName === query) score += 100;
+  if (symbol.name === query) score += 90;
+  if (lowerQualified === lowerQuery) score += 80;
+  if (lowerQualified.endsWith(`.${lowerQuery}`)) score += 70;
+  if (lowerName === lowerQuery) score += 60;
+  if (lowerQualified.includes(lowerQuery)) score += 20;
+  if (lowerName.includes(lowerQuery)) score += 10;
+
+  return score;
+}
+
+export function readLineSnippet(filePath: string, line: number, context = 0): string {
+  try {
+    const content = readFileSync(filePath, "utf8");
+    const lines = content.split(/\r?\n/);
+    const idx = Math.max(0, Math.min(line, lines.length - 1));
+    return lines.slice(Math.max(0, idx - context), idx + context + 1).join("\n").trim();
+  } catch {
+    return "";
+  }
+}

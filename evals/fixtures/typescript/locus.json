@@ -1,0 +1,26 @@
+{
+  "root": "D:\\code\\lsp-solution-mota\\evals\\fixtures\\typescript",
+  "servers": [
+    {
+      "id": "typescript",
+      "languageId": "typescript",
+      "extensions": [
+        ".ts",
+        ".tsx",
+        ".js",
+        ".jsx",
+        ".mts",
+        ".cts",
+        ".mjs",
+        ".cjs"
+      ],
+      "command": "typescript-language-server",
+      "args": [
+        "--stdio"
+      ]
+    }
+  ],
+  "warm": [
+    "typescript"
+  ]
+}
