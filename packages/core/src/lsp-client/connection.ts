@@ -221,10 +221,13 @@ export function uriToFilePath(uri: string): string {
   if (uri.startsWith("file://")) {
     const url = new URL(uri);
     let path = decodeURIComponent(url.pathname);
-    if (process.platform === "win32" && path.startsWith("/")) {
-      path = path.slice(1);
+    if (process.platform === "win32") {
+      if (path.startsWith("/")) {
+        path = path.slice(1);
+      }
+      return path.replace(/\//g, "\\");
     }
-    return path.replace(/\//g, "\\");
+    return path;
   }
   return uri;
 }
