@@ -19,7 +19,7 @@ export type { LocusServerContext } from "./context.js";
 export async function createLocusServer(cwd?: string): Promise<{ server: Server; ctx: LocusServerContext }> {
   const ctx = createLocusContext(cwd);
   const server = new Server(
-    { name: "locus", version: "0.1.0" },
+    { name: "locus", version: "0.1.1" },
     { capabilities: { tools: {} } },
   );
 

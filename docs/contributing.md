@@ -17,7 +17,7 @@ Thank you for your interest in contributing. This document covers development se
 
 ```bash
 git clone https://github.com/paladini/locus-mcp.git
-cd locus
+cd locus-mcp
 npm install
 npm run build
 ```
@@ -63,24 +63,52 @@ Integration tests skip automatically when LSP binaries are not on `PATH`.
 
 - Unit tests live in `packages/*/test/*.test.ts`
 - Use Node.js built-in test runner (`node:test`) with `tsx` for TypeScript
-- Mock `LspClient` for symbol resolver tests; use real LSP only in integration tests
+- Mock `LspClient` for symbol resolver and MCP handler tests
+- Use `packages/core/test/fixtures/fake-lsp.mjs` for LSP client/connection tests (mock JSON-RPC)
+- Use real LSP only in `packages/mcp/test/integration.test.ts`
 - Fixtures are under `evals/fixtures/`
 
-## Code guidelines
+### Test coverage areas
 
-- Keep the MCP surface at six tools — discuss new tools in an issue first
-- Match existing TypeScript style (ESM, strict types)
-- User-facing strings and documentation must be in English
-- Prefer minimal, focused diffs
+| Area | Package | Test files |
+|------|---------|------------|
+| Config (.lsp.json, locus.toml) | core | `config.test.ts` |
+| Registry | core | `format.test.ts`, `registry-extended.test.ts` |
+| Symbol resolver | core | `resolver.test.ts` |
+| Format layer | core | `format.test.ts`, `format-extended.test.ts` |
+| LSP connection/client | core | `lsp-connection.test.ts`, `lsp-client.test.ts` |
+| LSP manager | core | `lsp-manager.test.ts` |
+| MCP tool schemas | mcp | `tools.test.ts` |
+| MCP tool handlers | mcp | `handlers.test.ts` |
+| Error handling | mcp | `helpers.test.ts`, `handlers.test.ts` |
+| CLI commands | mcp | `cli.test.ts`, `cli-extended.test.ts` |
+| Integration (optional) | mcp | `integration.test.ts` |
+
+## Code style
+
+- ESM modules with `.js` import extensions
+- Strict TypeScript — match existing patterns
+- Minimal diffs; no drive-by refactors
+- User-facing strings in English
+- Keep MCP surface at six tools unless discussed in an issue
+
+## Branch naming
+
+- `fix/description` — bug fixes
+- `feat/description` — features (discuss new MCP tools first)
+- `docs/description` — documentation
+- `test/description` — test-only changes
+- `chore/description` — CI, tooling, release
 
 ## Pull request process
 
 1. Fork the repository and create a feature branch
 2. Make your changes with tests where appropriate
 3. Ensure `npm run build`, `npm run typecheck`, and `npm test` pass
-4. Open a PR with a clear description and test plan
+4. Fill out the PR template checklist in `.github/PULL_REQUEST_TEMPLATE.md`
+5. Open a PR with a clear description and test plan
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md) at the repo root for the standard open-source contribution checklist.
+See [CONTRIBUTING.md](../CONTRIBUTING.md) at the repo root for the full checklist.
 
 ## Reporting issues
 
@@ -91,6 +119,8 @@ Include:
 - Output of `locus check`
 - MCP host (Cursor, Claude Code, etc.)
 - Minimal reproduction steps
+
+Use GitHub issue templates for bugs and feature requests.
 
 ## License
 

@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest a new feature or improvement for Locus
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Locus intentionally keeps a small MCP surface (six tools). Please describe the problem before proposing new tools.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem does this solve for AI agents or developers?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Can existing tools (locate, refs, hover, diagnostics, status, rename) solve this?
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This is a documentation improvement only
+        - label: This may require a new MCP tool (needs maintainer discussion)
+        - label: This is a core/LSP client improvement

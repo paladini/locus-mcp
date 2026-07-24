@@ -1,9 +1,17 @@
 {
   "name": "locus",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Agent-first MCP server for LSP-based code intelligence",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paladini/locus-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/paladini/locus-mcp/issues"
+  },
+  "homepage": "https://github.com/paladini/locus-mcp#readme",
   "workspaces": [
     "packages/*"
   ],
