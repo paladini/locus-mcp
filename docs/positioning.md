@@ -4,7 +4,13 @@ How Locus fits in the AI coding agent ecosystem — what it is, what it is not, 
 
 ## One-line positioning
 
-**Locus is ground truth for your coding agent: the semantic layer (definitions, references, types, diagnostics) that grep and file reads cannot provide — without replacing your IDE or your host's edit tools.**
+**Locus is ground truth for your coding agent — without the weight of a full IDE toolkit: lightweight LSP intelligence through six curated MCP tools (definitions, references, types, diagnostics) that grep and file reads cannot provide.**
+
+**Taglines:**
+
+- Ground truth for your coding agent — without the weight of a full IDE toolkit
+- Lightweight LSP intelligence for AI agents
+- 6 tools. Symbol-first. No IDE replacement.
 
 ## The problem Locus solves
 
@@ -17,6 +23,28 @@ Modern AI agents navigate code through a blunt toolkit:
 Human developers solved this decades ago with **language servers** (LSP): go-to-definition, find references, hover types, diagnostics. Locus exposes that ground truth to agents through a **minimal MCP surface** — six tools, compact output, predictable behavior.
 
 Locus does **not** try to be the agent's IDE. It does **not** symbolic-edit, refactor bodies, or maintain long-lived memory. Those are different products with different trade-offs (see Serena below).
+
+## Lightweight + efficiency as core differentiators
+
+Locus is deliberately **lighter** than full MCP IDE bridges like Serena. That is a feature, not a missing feature list.
+
+### Where Locus is lighter
+
+| Dimension | Locus advantage |
+|-----------|-----------------|
+| **Install** | `npx @locus-dev/mcp` vs Serena's `uv tool install serena-agent` + Python ecosystem |
+| **Tool surface** | 6 curated MCP tools vs Serena's many tools (edit, memory, shell, refactor, …) |
+| **Scope** | Navigation + diagnostics only — no IDE replacement, no symbolic edit toolkit |
+| **Agent cognitive load** | Smaller tool menu → faster tool selection, less context pollution from tool definitions |
+| **Runtime** | Lean TypeScript MCP bridge vs full Python agent toolkit |
+
+### What "lightweight" means — and what it does not mean
+
+**Means:** Locus is lighter to **adopt, configure, and operate daily**. One npm package, six predictable tools, no second IDE inside your agent loop.
+
+**Does not mean:** Locus always uses fewer tokens than Serena for every task. Serena's symbolic edit tools can be **more token-efficient** for large refactors — one `replace_symbol_body` call vs many host-side edits. Serena also ships with **40+ language** backends; Locus ships **four built-ins** (TypeScript/JavaScript, Python, Go, Rust), extensible via config.
+
+Position honestly: choose Locus for **efficient daily navigation** when your host already handles edits; choose Serena when you want **one heavy MCP stack** for symbolic editing and memory.
 
 ## End users are agents
 
@@ -87,12 +115,13 @@ Position Locus as **grep + LSP**, not **grep replacement**.
 
 ### Primary message
 
-> Your agent reads and greps blindly. Locus gives it the same ground truth your language server gives you — definitions, references, types, diagnostics — in six MCP tools.
+> Your agent reads and greps blindly. Locus gives it the same ground truth your language server gives you — definitions, references, types, diagnostics — in six MCP tools, without the weight of a full IDE toolkit.
 
 ### Secondary messages
 
-- **For Cursor / Claude Code / Codex users:** Add one MCP server; keep using your host for edits.
-- **For teams with context budgets:** Compact line output vs verbose LSP JSON.
+- **For Cursor / Claude Code / Codex users:** Add one MCP server with `npx`; keep using your host for edits.
+- **For teams with context budgets:** Six tools, compact line output, minimal cognitive load vs dozens of MCP primitives.
+- **For teams comparing Serena:** Locus is navigation-only — lighter install, smaller tool menu, complements rather than replaces your host.
 - **For polyglot repos:** One config (`locus.json`, `.lsp.json`) across TypeScript, Python, Go, Rust — extensible to more servers.
 
 ### What not to claim

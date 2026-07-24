@@ -6,8 +6,9 @@ A practical comparison for teams choosing an **MCP + LSP code intelligence** sta
 
 | | **Locus** | **Serena** | **mcp-language-server** | **cclsp** |
 |---|-----------|------------|-------------------------|-----------|
-| Tagline | Ground truth for your coding agent | The IDE for your coding agent | Generic LSP bridge | Claude Code LSP plugin |
+| Tagline | Ground truth for your coding agent — without the weight of a full IDE toolkit | The IDE for your coding agent | Generic LSP bridge | Claude Code LSP plugin |
 | Primary goal | Semantic navigation layer | Full agent IDE (edit + refactor + memory) | Generic LSP-over-MCP | Host-native LSP for Claude Code |
+| **Weight & efficiency** | **Lightweight** — `npx @locus-dev/mcp`, 6 tools, lean TS bridge, low agent cognitive load | **Heavy** — Python/`uv` install, many tools, full agent toolkit, higher context cost | Variable — often verbose JSON, unfixed tool catalog | Host-native — no separate MCP server |
 | End user | AI agent (human installs) | AI agent (human installs) | AI agent / experimenter | Claude Code user |
 | MCP tools | **6 curated tools** | Many (find, edit, refactor, memory, …) | Variable / generic | Host-specific |
 | Symbolic editing | **No** — use host Edit | Yes (`replace_symbol_body`, etc.) | Depends on bridge | Limited |
@@ -35,12 +36,13 @@ A practical comparison for teams choosing an **MCP + LSP code intelligence** sta
 
 **Trade-offs:**
 
-- **No symbolic editing** — agents apply changes through host Edit tools
+- **No symbolic editing** — agents apply changes through host Edit tools (Serena can be more token-efficient for large symbolic refactors)
 - **No agent memory** — no long-lived project knowledge store
+- **Four built-in languages** — Serena supports 40+; Locus is extensible via config but ships TS/JS, Python, Go, Rust
 - Smaller tool surface by design — not a full LSP passthrough
 - Rename is preview-only by default; host applies the patch
 
-**Positioning:** Locus complements grep and host tools; it does not try to be the agent's IDE.
+**Positioning:** Locus complements grep and host tools; it does not try to be the agent's IDE. **Lightweight** = lighter to adopt and operate daily, not "always fewer tokens for every task."
 
 ## Serena
 

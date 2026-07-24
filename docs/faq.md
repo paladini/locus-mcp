@@ -14,6 +14,24 @@ Grep finds text patterns. Locus finds **symbols** — functions, classes, types 
 
 Serena is **the IDE for your coding agent** — symbolic editing, refactoring, and memory. Locus is **ground truth for your coding agent** — definitions, references, types, and diagnostics only. Locus complements your host's Edit/Grep; Serena replaces more IDE duties inside MCP. See [comparison.md](./comparison.md) and [positioning.md](./positioning.md).
 
+## Is Locus just a lighter Serena?
+
+**Partially — but not a drop-in substitute.** Locus is lighter in ways that matter for daily agent operation:
+
+- **Install:** `npx @locus-dev/mcp` vs `uv tool install serena-agent` + Python ecosystem
+- **Tool surface:** 6 curated MCP tools vs Serena's many (edit, memory, shell, refactor, …)
+- **Scope:** Navigation + diagnostics only — no IDE replacement, no symbolic edit toolkit
+- **Agent cognitive load:** Smaller tool menu means faster tool selection and less context spent on tool definitions
+- **Runtime:** Lean TypeScript MCP bridge vs full Python agent toolkit
+
+**Honest caveats — where Serena is not "heavier for no reason":**
+
+- Serena can be **more token-efficient for large symbolic refactors** — one `replace_symbol_body` vs many host edits
+- Serena supports **40+ languages**; Locus ships **four built-ins** (TS/JS, Python, Go, Rust), extensible via `locus.json` / `.lsp.json`
+- **"Lightweight"** means lighter to adopt and operate daily — not "always fewer tokens for every task"
+
+**Choose Locus** when your MCP host already edits well and you want a thin LSP navigation layer. **Choose Serena** when you want symbolic editing, refactoring, and agent memory in one MCP stack.
+
 ## Which language servers are supported?
 
 Built-in adapters: TypeScript/JavaScript (`typescript-language-server`), Python (`pyright-langserver`), Go (`gopls`), Rust (`rust-analyzer`). Override or extend via `locus.json` or `.lsp.json`.

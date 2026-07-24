@@ -1,8 +1,8 @@
 # Locus
 
-<h3 align="center">Ground truth for your coding agent.</h3>
+<h3 align="center">Ground truth for your coding agent — without the weight of a full IDE toolkit.</h3>
 
-<p align="center"><strong>The semantic layer your agent is missing — definitions, references, types, and diagnostics without replacing your IDE.</strong></p>
+<p align="center"><strong>Lightweight LSP intelligence for AI agents. 6 tools. Symbol-first. No IDE replacement.</strong></p>
 
 [![npm version](https://img.shields.io/npm/v/@locus-dev/mcp)](https://www.npmjs.com/package/@locus-dev/mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -78,28 +78,36 @@ Add the same `npx @locus-dev/mcp serve` launch command to your Claude Code MCP c
 
 ---
 
-## Why Locus?
+## Why lightweight matters
+
+**Lightweight** here means lighter to **adopt and operate daily** — not "always fewer tokens for every task." Locus is a lean TypeScript MCP bridge with six curated tools. Serena is a full Python agent toolkit with symbolic editing, memory, and shell. Both use LSP; the weight class is different.
+
+| | **grep / ripgrep** | **Serena** | **Locus** |
+|---|-------------------|------------|-----------|
+| **Install** | Already in your shell | `uv tool install serena-agent` + Python ecosystem | `npx @locus-dev/mcp` (Node.js 22+) |
+| **Runtime stack** | Native binary | Python agent toolkit + LSP backends | Lean TypeScript MCP bridge + LSP backends |
+| **MCP tool count** | n/a (host Grep) | Many (edit, memory, shell, find, refactor, …) | **6 curated tools** |
+| **Agent cognitive load** | Low — one search primitive | High — large tool menu, more context pollution | **Low — small menu, faster tool selection** |
+| **RAM / complexity** | Minimal | Heavier — full agent IDE surface | **Minimal bridge** — navigation + diagnostics only |
+| **Scope** | Text search | IDE replacement inside MCP | **Navigation + diagnostics only** |
+| **Symbolic editing** | no | yes (`replace_symbol_body`, …) | **no** (use host Edit tools) |
+| **Agent memory** | no | yes | **no** |
+| **Languages (built-in)** | All text files | 40+ via LSP backends | **4** (TS/JS, Python, Go, Rust — extensible via config) |
+| **Best use case** | Strings, logs, config keys | Full symbolic refactors, memory, one MCP stack for everything | **Thin LSP layer** when your host already edits well |
+
+### Honest caveats
+
+- **Serena can be more token-efficient for large symbolic refactors** — one `replace_symbol_body` vs many host edits.
+- **Serena supports 40+ languages** out of the box; Locus ships four built-ins (extensible via `locus.json` / `.lsp.json`).
+- **"Lightweight" ≠ "always fewer tokens."** For navigation and diagnostics, Locus wins on install friction, tool-surface size, and daily operation. For heavy symbolic rewrites, Serena's edit toolkit can cost less per operation.
 
 ### vs grep-only
 
 Grep finds text. Locus finds **symbols** — the function, class, or type your language server understands. Use both: grep for strings and logs; Locus for definitions, references, types, and compiler diagnostics.
 
-### vs Serena and other LSP bridges
-
-| | **grep / ripgrep** | **Serena** | **Locus** |
-|---|-------------------|------------|-----------|
-| Primary role | Text search | Full agent IDE (edit, refactor, memory) | Semantic navigation layer |
-| End-user framing | N/A | "The IDE for your coding agent" | "Ground truth for your coding agent" |
-| Symbol lookup | no | yes | **yes** |
-| Symbolic editing | no | yes | **no** (use host Edit tools) |
-| Agent memory | no | yes | **no** |
-| MCP tool count | n/a | many | **6 curated tools** |
-| Output shape | lines of text | mixed | **compact line format** |
-| Complements host Edit/Grep | yes | replaces more of IDE | **yes** |
-
 Serena is excellent when you want a broad IDE toolkit inside the agent. **Locus is for teams that already have a capable host** and want a thin, predictable LSP layer — not a second IDE.
 
-Honest deep dive: [docs/comparison.md](docs/comparison.md) · [docs/positioning.md](docs/positioning.md)
+Honest deep dive: [docs/comparison.md](docs/comparison.md) · [docs/positioning.md](docs/positioning.md) · [docs/faq.md](docs/faq.md#is-locus-just-a-lighter-serena)
 
 ---
 

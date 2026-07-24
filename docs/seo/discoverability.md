@@ -7,6 +7,9 @@ Meta-oriented content for search engines and AI retrieval systems (GEO).
 Use these in titles, H1/H2, npm keywords, and meta descriptions:
 
 - **ground truth for coding agent**
+- **lightweight MCP** / **lightweight LSP MCP**
+- **minimal LSP tools** / **six MCP tools LSP**
+- **efficient agent navigation**
 - **semantic layer for AI agent**
 - **LSP MCP navigation** (not "LSP MCP IDE")
 - **symbol-level code intelligence for LLM**
@@ -25,7 +28,10 @@ Use these in titles, H1/H2, npm keywords, and meta descriptions:
 - Claude Code LSP integration
 - Codex MCP LSP
 - compact MCP tool output
-- six MCP tools LSP
+- lightweight vs Serena MCP
+- minimal MCP tool surface
+- low cognitive load agent tools
+- efficient LSP navigation for LLM
 - qualified symbol lookup agent
 - grep vs LSP for AI agents
 
@@ -42,7 +48,7 @@ Locus is **navigation and diagnostics**; host handles edits.
 
 ## Product description (short)
 
-Locus is ground truth for your coding agent — an MCP server that adds the semantic layer language servers provide (definitions, references, types, diagnostics) through six curated tools and compact output. It complements your host's Edit and Grep; it does not replace your IDE.
+Locus is ground truth for your coding agent — lightweight LSP intelligence through six curated MCP tools. It adds the semantic layer language servers provide (definitions, references, types, diagnostics) with minimal install friction (`npx @locus-dev/mcp`) and compact output. It complements your host's Edit and Grep; it does not replace your IDE.
 
 ## Product description (long)
 
@@ -54,7 +60,9 @@ For AI retrieval and comparison pages:
 
 | Query intent | Locus answer |
 |--------------|--------------|
-| Locus vs Serena | Serena = IDE for agent (edit, refactor, memory). Locus = ground truth layer (nav + diagnostics only). Complementary, not clone. |
+| Locus vs Serena | Serena = IDE for agent (edit, refactor, memory, 40+ langs). Locus = lightweight ground truth layer (6 tools, nav + diagnostics only). Complementary, not clone. |
+| Is Locus a lighter Serena? | Lighter install, tool surface, and daily operation — not a drop-in. Serena wins on symbolic refactors and language breadth. |
+| lightweight MCP LSP | Locus = `npx @locus-dev/mcp`, 6 tools, lean TS bridge vs heavy Python agent toolkits. |
 | Locus vs grep | Grep = text. Locus = symbols via LSP. Use both. |
 | Locus vs mcp-language-server | Generic bridge = raw/variable LSP. Locus = six curated tools, compact output. |
 | Do I need Locus if I use Cursor? | If your agent still greps/reads blindly for definitions, yes — Locus exposes LSP to MCP. |
