@@ -5,31 +5,44 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/paladini/locus-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/paladini/locus-mcp/actions/workflows/ci.yml)
 
-Locus is an open-source [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that connects AI coding agents to [Language Server Protocol (LSP)](https://microsoft.github.io/language-server-protocol/) backends. It exposes six tools for symbol lookup, references, types, and diagnostics. Your MCP host (Cursor, Codex, Claude Code) still handles file edits, grep, and terminal commands.
+Locus gives your AI coding agent a map of your codebase. If you use Cursor, Codex, Claude Code, or Copilot to write and change code, Locus connects that agent to the same kind of "go to definition" and "find all references" intelligence your IDE uses — through [MCP](https://modelcontextprotocol.io) (Model Context Protocol), a standard way for your AI tool to call specialized helpers. You configure it once; your agent uses six small tools to find symbols, trace callers, read types, and catch errors before you run tests.
 
-The MCP server is the product. The CLI exists to initialize config, check language-server binaries, and run `serve` — which your host spawns automatically. The agent is the end user; you configure Locus once per project.
+## Why you might want this
 
-## The problem
+- **Find the real definition** — Your agent can locate `UserService.authenticate` even when it is re-exported, overloaded, or buried in a large file — not just wherever the name appears as text.
+- **See who calls what** — Before a refactor, list every reference to a function or class so nothing breaks silently.
+- **Read types and docs** — Ask what a variable or parameter actually is, without guessing from variable names.
+- **Catch errors early** — Surface compiler and linter problems right after an edit, instead of waiting for a full test run.
 
-Most agents navigate code by reading whole files and grepping text. That works for string search, but it misses what the compiler knows: which `processOrder` overload you mean, where a symbol is actually defined, or whether a patch introduces type errors.
+## Who this is for
 
-Language servers already solve this for human developers. Locus exposes the same information to agents through a fixed set of six MCP tools with compact, line-oriented output.
+Locus is for **AI-first builders**: developers, indie hackers, and PMs who work through an agent and want it to understand code structure, not just search strings.
 
-## Quick start
+It fits when your agent already edits files well (Cursor's Edit tool, Claude Code, Codex) and you want to add semantic navigation on top — without turning your setup into a second IDE inside MCP.
 
-1. Add Locus to your MCP host (configs below).
-2. Run one-time project setup:
+It is **not** for people who want symbolic editing, agent memory, or a full refactoring toolkit inside MCP. For that, look at [Serena](https://github.com/oraios/serena) — a broader option that does more inside the protocol. Locus stays intentionally small: six tools, `npx` install, complements your host.
 
-```bash
-npx @locus-dev/mcp init    # generate locus.toml + locus.json
-npx @locus-dev/mcp check   # verify language-server binaries
-```
+## Get started in 5 minutes
 
-3. Start coding. The host spawns `npx @locus-dev/mcp serve` automatically.
+1. **Install a language server** (if you do not have one yet) — for TypeScript/JavaScript: `npm install -g typescript-language-server typescript`. See [Installing language servers](docs/getting-started.md#step-2-install-language-servers) for Python, Go, and Rust.
+2. **Run one-time setup** in your project folder:
+   ```bash
+   npx @locus-dev/mcp init
+   npx @locus-dev/mcp check
+   ```
+3. **Add Locus to your agent's MCP config** — copy a block from [Copy-paste configs](#copy-paste-configs) below. Set `cwd` to your project's absolute path.
+4. **Reload MCP** — restart Cursor, reload Codex, or reopen Claude Code so the new server appears.
+5. **Try a prompt** — ask your agent: *"Use Locus to find where `UserService` is defined and list all references."* If it calls the `locate` and `refs` tools, you are set.
 
-**Prerequisites:** Node.js 22+ and language servers on your `PATH`. See [docs/getting-started.md](docs/getting-started.md#installing-language-servers).
+**Requirements:** Node.js 22+. Language servers on your `PATH` for the languages you use.
+
+## Copy-paste configs
+
+Your agent host spawns Locus automatically — you never run `serve` by hand during normal use.
 
 ### Cursor
+
+Create or edit `.cursor/mcp.json` in your project (or global Cursor MCP settings):
 
 ```json
 {
@@ -45,6 +58,8 @@ npx @locus-dev/mcp check   # verify language-server binaries
 
 ### Codex
 
+Add to `~/.codex/config.toml` (global) or `.codex/config.toml` (project):
+
 ```toml
 [mcp_servers.locus]
 command = "npx"
@@ -52,49 +67,67 @@ args = ["-y", "@locus-dev/mcp", "serve"]
 cwd = "/absolute/path/to/your/project"
 ```
 
-For Claude Code and other hosts, see [docs/usage.md](docs/usage.md).
+For a project-scoped config, you can use `cwd = "."` instead.
 
-## Tools
+### Claude Code
 
-| Tool | Description |
-|------|-------------|
+Add to Claude Code MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "locus": {
+      "command": "npx",
+      "args": ["-y", "@locus-dev/mcp", "serve"],
+      "cwd": "/absolute/path/to/your/project"
+    }
+  }
+}
+```
+
+More detail (local dev, troubleshooting): [docs/usage.md](docs/usage.md)
+
+## Example prompts to try
+
+Paste these into your agent after Locus is configured:
+
+- *"Find where `UserService` is defined. Use Locus `locate`, not grep."*
+- *"Before we rename `parseConfig`, use Locus to list every file that calls it."*
+- *"What type does `response.data` have in `src/api/handler.ts`? Use Locus `hover`."*
+- *"After your edits, run Locus diagnostics on the files you changed and fix any errors."*
+- *"Check Locus `status` — are the language servers ready?"*
+
+## What Locus does NOT do
+
+- **Edit your code** — Your agent's Edit/Write tools still apply changes. Locus only reads structure and diagnostics.
+- **Replace grep** — Grep is still best for log lines, config keys, comments, and plain text search.
+- **Remember things between sessions** — No agent memory store; each session starts fresh.
+- **Run refactors for you** — `rename` previews impact; your agent applies the actual edits.
+- **Expose every LSP feature** — Six focused tools only, not a full IDE protocol passthrough.
+- **Compete with large toolkits** — If you need symbolic body replacement, memory, and 40+ languages in one MCP stack, consider [Serena](https://github.com/oraios/serena) instead.
+
+## Tools at a glance
+
+| Tool | What it does |
+|------|----------------|
 | [`locate`](docs/tools.md#locate) | Find a symbol by name or list symbols in a file |
 | [`refs`](docs/tools.md#refs) | All references or implementations at a position |
 | [`hover`](docs/tools.md#hover) | Type information and documentation |
 | [`diagnostics`](docs/tools.md#diagnostics) | File or workspace errors and warnings |
 | [`status`](docs/tools.md#status) | Language-server readiness and missing binaries |
-| [`rename`](docs/tools.md#rename) | Preview a rename (dry-run by default; apply via host edits) |
+| [`rename`](docs/tools.md#rename) | Preview a rename (dry-run; apply via your agent) |
 
-Full reference with examples: [docs/tools.md](docs/tools.md)
-
-## When to use Locus
-
-- Your agent greps for function or class names instead of using go-to-definition.
-- You want LSP-accurate references before a refactor.
-- Your MCP host already handles edits well and you only need navigation and diagnostics.
-- You want a small, predictable tool surface (six tools, compact output).
-
-## When not to use Locus
-
-- **String search only** — use your host's grep for logs, config keys, and comments.
-- **Symbolic editing inside MCP** — Locus does not edit code. Use host Edit tools, or consider [Serena](https://github.com/oraios/serena) if you want MCP-native symbol replacement and refactoring.
-- **Agent memory across sessions** — Locus has no memory store.
-- **Raw LSP passthrough** — use a generic LSP bridge if you need uncommon LSP methods.
-
-Serena and Locus both use LSP. Serena exposes more tools (symbolic editing, memory, refactoring). Locus is navigation and diagnostics only — six tools, `npx` install, meant to complement a capable host. See [docs/comparison.md](docs/comparison.md).
-
-## Documentation
+## Learn more
 
 | Guide | Description |
 |-------|-------------|
-| [Usage](docs/usage.md) | Host setup, MCP vs CLI, agent workflows |
-| [Positioning](docs/positioning.md) | Scope, trade-offs, when to choose alternatives |
-| [Comparison](docs/comparison.md) | Locus vs Serena, bridges, grep |
-| [FAQ](docs/faq.md) | Common questions |
-| [Getting started](docs/getting-started.md) | Install, prerequisites, first setup |
-| [Tools](docs/tools.md) | All six MCP tools with examples |
-| [Configuration](docs/configuration.md) | locus.toml, locus.json, .lsp.json |
-| [Contributing](docs/contributing.md) | Dev setup and tests |
+| [Usage guide](docs/usage.md) | Step-by-step setup, workflows, troubleshooting |
+| [Getting started](docs/getting-started.md) | First-time setup — no LSP knowledge required |
+| [FAQ](docs/faq.md) | Do I need to be a programmer? What's MCP? |
+| [Who is Locus for?](docs/positioning.md) | Fit, scope, and when to pick alternatives |
+| [Comparison](docs/comparison.md) | Locus vs Serena, bridges, and grep |
+| [Tools reference](docs/tools.md) | All six MCP tools with examples |
+| [Configuration](docs/configuration.md) | `locus.toml`, `locus.json`, language servers |
 
 ## License
 

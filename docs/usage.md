@@ -1,88 +1,62 @@
-# Usage Guide — MCP First
+# Usage Guide
 
-**Locus is an MCP server.** Your AI agent (Cursor, Codex, Claude Code, etc.) calls six MCP tools for semantic code intelligence. The CLI exists to install, configure, and **launch** that server — not to be the product interface.
+Locus is an MCP server your AI agent calls during conversations. You configure it once; the agent uses six tools to navigate code by meaning — not by searching for text strings.
 
-## MCP vs CLI — what is what?
+This guide is written for **people who use AI agents to work on code**, whether or not you write code yourself.
+
+## How it fits together
+
+**MCP** (Model Context Protocol) is a standard way for AI tools to call specialized helpers. Instead of your agent guessing how code is structured, it can ask Locus: "Where is this function defined?" or "Who calls this?"
+
+**Locus** sits between your agent and **language servers** — the same programs IDEs use for go-to-definition, find references, and error checking.
 
 ```mermaid
 flowchart LR
-  subgraph agent["Your AI agent"]
-    A[Cursor / Codex / Claude Code]
-  end
-
-  subgraph mcp["MCP layer — the product"]
-    T1[locate]
-    T2[refs]
-    T3[hover]
-    T4[diagnostics]
-    T5[status]
-    T6[rename]
-  end
-
-  subgraph cli["CLI — setup & launch only"]
-    serve["locus serve"]
-    init["locus init"]
-    check["locus check"]
-    warm["locus warm"]
-  end
-
-  subgraph lsp["Language servers"]
-    LS[typescript-language-server, pyright, gopls, …]
-  end
-
-  A -->|"calls MCP tools"| mcp
-  serve -->|"stdio transport"| mcp
-  init -->|"writes config"| cli
-  check -->|"verifies binaries"| cli
-  warm -->|"pre-starts servers"| cli
-  mcp --> LS
+  Agent[Your AI agent] -->|MCP tools| Locus[Locus]
+  Locus --> LS[Language servers]
+  You[You] -->|init, check, MCP config| Setup[One-time setup]
+  Host[Cursor / Codex / Claude Code] -->|spawns| Locus
 ```
 
-| Layer | Role | Who uses it |
-|-------|------|-------------|
-| **MCP tools** | Semantic navigation — definitions, references, types, diagnostics | **Your agent** (automatically via MCP) |
-| **`locus serve`** | Starts the MCP server over stdio | **MCP host config** (Cursor, Codex, etc. spawn this) |
-| **`locus init` / `check` / `warm`** | One-time setup and ops | **You** (human), before or between agent sessions |
+| Who | Does what |
+|-----|-----------|
+| **You** | Run `init` and `check` once; paste MCP config; reload your agent |
+| **Your agent host** | Spawns `npx @locus-dev/mcp serve` automatically |
+| **Your agent** | Calls MCP tools (`locate`, `refs`, …) — never shell CLI commands |
+| **Locus** | Translates tool calls into language-server requests |
 
-> **Important:** Agents never run `locus locate` in a terminal. They call the MCP tool `locate`. The CLI command `serve` is what your editor spawns behind the scenes.
+> Your agent does **not** run `locus locate` in a terminal. It calls the MCP tool named `locate`. The host starts the server; you do not need to run `serve` manually.
 
----
+## The six tools
 
-## The six MCP tools
-
-These are the only interface your agent needs:
-
-| Tool | Purpose |
-|------|---------|
+| Tool | Use when you need to… |
+|------|------------------------|
 | [`locate`](./tools.md#locate) | Find a symbol by name or list symbols in a file |
-| [`refs`](./tools.md#refs) | Find references or implementations |
-| [`hover`](./tools.md#hover) | Type info and documentation |
-| [`diagnostics`](./tools.md#diagnostics) | File or workspace errors/warnings |
-| [`status`](./tools.md#status) | Server readiness and missing binaries |
-| [`rename`](./tools.md#rename) | Preview a rename (dry-run by default) |
+| [`refs`](./tools.md#refs) | Find all references or implementations |
+| [`hover`](./tools.md#hover) | Read type info and documentation |
+| [`diagnostics`](./tools.md#diagnostics) | Check for errors and warnings |
+| [`status`](./tools.md#status) | See if language servers are ready |
+| [`rename`](./tools.md#rename) | Preview what a rename would affect |
 
-Full parameter reference: [tools.md](./tools.md)
-
----
-
-## CLI commands (setup & ops only)
-
-```bash
-locus serve [--cwd path]   # Start MCP server (stdio) — spawned by your MCP host
-locus init  [--cwd path]   # Generate locus.toml + locus.json in a project
-locus check [--cwd path]   # Verify language-server binaries are on PATH
-locus warm  [--cwd path]   # Pre-start language servers (optional, reduces cold-start)
-```
-
-You typically run `init` and `check` once per project. Your MCP host runs `serve` automatically — you do not start it manually during normal agent use.
+Full parameters and examples: [tools.md](./tools.md)
 
 ---
 
-## Setup: Cursor
+## Setup walkthrough
 
-Add Locus to `.cursor/mcp.json` in your project (or global Cursor MCP settings).
+### Before you start
 
-### Published package (recommended)
+1. Node.js 22+ installed
+2. Language servers for your project's languages ([getting started — language servers](./getting-started.md#step-2-install-language-servers))
+3. In your project root:
+   ```bash
+   npx @locus-dev/mcp init
+   npx @locus-dev/mcp check
+   ```
+
+### Cursor
+
+1. Create `.cursor/mcp.json` in your project (or edit global Cursor MCP settings):
 
 ```json
 {
@@ -96,7 +70,12 @@ Add Locus to `.cursor/mcp.json` in your project (or global Cursor MCP settings).
 }
 ```
 
-### Local development (from a Locus clone)
+2. Set `cwd` to your project's **absolute path**.
+3. Reload MCP servers in Cursor (Command Palette → "MCP: Reload" or restart Cursor).
+
+> **Screenshot placeholder:** Cursor MCP panel showing `locus` connected with six tools listed.
+
+**Local development** (from a Locus clone):
 
 ```json
 {
@@ -110,24 +89,11 @@ Add Locus to `.cursor/mcp.json` in your project (or global Cursor MCP settings).
 }
 ```
 
-For local dev analyzing a **different** project, point `cwd` at that project's root instead.
+Point `cwd` at the project you want analyzed, not necessarily the Locus repo.
 
-**Steps:**
+### Codex
 
-1. Run `npx locus init` and `npx locus check` in your project root (one time).
-2. Create or edit `.cursor/mcp.json` with the block above.
-3. Set `cwd` to your project's absolute path.
-4. Reload MCP servers in Cursor (or restart Cursor).
-
-Cursor spawns `npx @locus-dev/mcp serve` and exposes the six tools to the agent.
-
----
-
-## Setup: Codex
-
-Codex reads MCP config from `~/.codex/config.toml` (global) or `.codex/config.toml` (project-scoped, trusted projects only).
-
-### Global config (`~/.codex/config.toml`)
+Codex reads MCP config from `~/.codex/config.toml` (global) or `.codex/config.toml` (project-scoped).
 
 ```toml
 [mcp_servers.locus]
@@ -136,33 +102,9 @@ args = ["-y", "@locus-dev/mcp", "serve"]
 cwd = "/absolute/path/to/your/project"
 ```
 
-### Project config (`.codex/config.toml`)
+For project config, `cwd = "."` resolves relative to the project root.
 
-```toml
-[mcp_servers.locus]
-command = "npx"
-args = ["-y", "@locus-dev/mcp", "serve"]
-cwd = "."
-```
-
-Use `"."` when the config lives in the project you want analyzed. Codex resolves it relative to the project root.
-
-### Local development
-
-```toml
-[mcp_servers.locus]
-command = "node"
-args = ["packages/mcp/dist/bin.js", "serve"]
-cwd = "/absolute/path/to/locus-mcp"
-```
-
-**Steps:**
-
-1. Run `npx locus init` and `npx locus check` in your project.
-2. Add the `[mcp_servers.locus]` block to your Codex config.
-3. Restart Codex CLI or reload the VS Code extension.
-
-Optional: increase `startup_timeout_sec` if language servers are slow to boot:
+If language servers are slow to start, increase the timeout:
 
 ```toml
 [mcp_servers.locus]
@@ -172,13 +114,13 @@ cwd = "/absolute/path/to/your/project"
 startup_timeout_sec = 30
 ```
 
-Codex MCP reference: [developers.openai.com/codex/mcp](https://developers.openai.com/codex/mcp)
+Restart Codex CLI or reload the VS Code extension after saving.
 
----
+Codex MCP docs: [developers.openai.com/codex/mcp](https://developers.openai.com/codex/mcp)
 
-## Setup: Claude Code (brief)
+### Claude Code
 
-Add the same stdio block to Claude Code MCP settings:
+Add the same JSON block as Cursor to Claude Code MCP settings:
 
 ```json
 {
@@ -192,140 +134,101 @@ Add the same stdio block to Claude Code MCP settings:
 }
 ```
 
-Set `cwd` to the project root you want analyzed. Run `npx locus init` and `npx locus check` first.
+Run `init` and `check` in your project first, then reload MCP.
 
 ---
 
-## Agent workflows
+## What to tell your agent
 
-These are patterns your agent should follow once Locus MCP is configured. You can paste the example prompts directly into Cursor, Codex, or Claude Code.
+Agents work best when you are explicit. These patterns help:
 
-### Before grep: use `locate` to find a symbol
+### Find a symbol (use `locate`, not grep)
 
-Grep finds text strings. Locus finds **symbols** — functions, classes, methods — with LSP accuracy.
+Grep finds text. Locus finds **symbols** — functions, classes, methods — with compiler accuracy.
 
-**Agent should:**
-
-1. Call MCP tool `locate` with `{ "name": "MyClass.method" }`
-2. Use the returned `file:line:col` for navigation or further tool calls
-
-**Example prompt:**
+**Prompt:**
 
 > Find where `UserService.authenticate` is defined. Use Locus `locate`, not grep.
 
-### Before refactor: use `refs` to find callers
+**What the agent should do:** Call MCP tool `locate` with `{ "name": "UserService.authenticate" }`, then use the returned file and line.
 
-Before renaming or changing a function signature, find every reference.
+### Before a refactor (use `refs`)
 
-**Agent should:**
-
-1. Call `locate` to get the symbol position
-2. Call MCP tool `refs` with that file/line/character
-3. Review all call sites before editing
-
-**Example prompt:**
+**Prompt:**
 
 > Before refactoring `parseConfig`, use Locus to list all references. Show me every caller.
 
-### After edit: use `diagnostics` or a hook
+**What the agent should do:** `locate` → get position → `refs` → review call sites before editing.
 
-After writing or editing files, check for type errors and linter issues.
+### After editing (use `diagnostics`)
 
-**Agent should:**
-
-1. Call MCP tool `diagnostics` on the edited file (or workspace)
-2. Fix any errors before proceeding
-
-Optional: install the Cursor post-edit hook from `@locus-dev/adapters` to run diagnostics automatically after `Write`/`Edit` tool use.
-
-**Example prompt:**
+**Prompt:**
 
 > After your edits, run Locus diagnostics on `src/api/handler.ts` and fix any errors.
 
-### On cold start: call `status`
+**What the agent should do:** Call `diagnostics` on changed files before moving on.
 
-If tools return `server_starting`, the language server is still booting.
+Optional: install the Cursor post-edit hook from `@locus-dev/adapters` to run diagnostics automatically after `Write`/`Edit` tool use.
 
-**Agent should:**
+### On session start (use `status`)
 
-1. Call MCP tool `status`
-2. Retry the original tool, or ask the user to run `npx locus warm`
-
-**Example prompt:**
+**Prompt:**
 
 > Check Locus status and confirm TypeScript LSP is ready before we start.
 
-### Quick reference: Locus vs grep
+**What the agent should do:** Call `status`; if servers are still starting, wait and retry.
 
-| Need | Use |
-|------|-----|
+### Locus vs grep — quick reference
+
+| Need | Tool |
+|------|------|
 | Where is `Foo.bar` defined? | Locus `locate` |
 | Who calls this function? | Locus `refs` |
-| What type is this variable? | Locus `hover` |
+| What type is this? | Locus `hover` |
 | Any errors after my edit? | Locus `diagnostics` |
-| Find the string `"TODO"` in comments | Grep / ripgrep |
-| Regex search across files | Grep / ripgrep |
+| Find the string `"TODO"` in comments | Grep |
+| Search logs or config files | Grep |
+
+---
+
+## CLI commands (for you, not your agent)
+
+```bash
+npx @locus-dev/mcp init    # Create config in your project (once)
+npx @locus-dev/mcp check   # Verify language servers are installed
+npx @locus-dev/mcp warm    # Pre-start servers (optional)
+npx @locus-dev/mcp serve   # Started by your MCP host — not manually
+```
 
 ---
 
 ## Troubleshooting
 
-### Run `locus check`
-
-Verifies language-server binaries are installed and on your `PATH`:
+### Run `check` first
 
 ```bash
-npx locus check
+npx @locus-dev/mcp check
 ```
 
-Example output:
-
-```
-✓ typescript: typescript-language-server (found)
-✗ go: gopls (MISSING)
-```
-
-Install missing servers — see [Getting Started — language servers](./getting-started.md#installing-language-servers).
-
-### Missing binaries
-
-If `check` reports `MISSING`, install the server for that language and ensure it is on `PATH`. Locus cannot start an LSP without the binary.
-
-Common installs:
-
-```bash
-npm install -g typescript-language-server typescript   # TypeScript/JS
-pip install pyright                                     # Python
-go install golang.org/x/tools/gopls@latest              # Go
-rustup component add rust-analyzer                      # Rust
-```
+Fix any `MISSING` entries before expecting useful agent results.
 
 ### `server_starting`
 
-Tool output like this means the language server is still starting:
+The language server is still booting. Wait a few seconds, call `status`, or run:
 
+```bash
+npx @locus-dev/mcp warm
 ```
-status: server_starting
-Language server is still starting. Retry in a few seconds or call status/warm.
-```
 
-**Fix:**
+### MCP server not appearing
 
-1. Wait a few seconds and retry the tool
-2. Call MCP tool `status` to see which servers are ready
-3. Pre-warm before agent sessions: `npx locus warm`
-4. Increase Codex `startup_timeout_sec` if timeouts occur during boot
-
-### MCP server not appearing in host
-
-- Confirm `cwd` in MCP config points to your **project root** (absolute path recommended)
-- Ensure Node.js 22+ is installed
-- Run `npx locus check` — missing binaries can prevent useful responses
-- Reload MCP servers after config changes
+- `cwd` must point to your **project root** (absolute path recommended)
+- Node.js 22+ required
+- Reload MCP after config changes
 
 ### Agent runs CLI instead of MCP tools
 
-If your agent tries `locus locate` in a shell, remind it:
+Tell it:
 
 > Use the Locus MCP tool `locate`, not the CLI. Locus is configured as an MCP server.
 
@@ -333,7 +236,8 @@ If your agent tries `locus locate` in a shell, remind it:
 
 ## Next steps
 
-- [Getting Started](./getting-started.md) — prerequisites and first-time setup
-- [Configuration](./configuration.md) — `locus.toml`, language servers, `.lsp.json`
-- [Tools reference](./tools.md) — full MCP tool documentation
+- [Getting started](./getting-started.md) — first-time setup without LSP jargon
 - [FAQ](./faq.md) — common questions
+- [Who is Locus for?](./positioning.md) — fit and alternatives
+- [Configuration](./configuration.md) — `locus.toml`, language overrides
+- [Tools reference](./tools.md) — full MCP tool documentation

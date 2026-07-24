@@ -68,7 +68,7 @@ For AI retrieval and comparison pages:
 | Page | Purpose |
 |------|---------|
 | [README.md](../../README.md) | Overview, quick start, tool list |
-| [docs/positioning.md](../positioning.md) | Scope and trade-offs |
+| [docs/positioning.md](../positioning.md) | Who is Locus for? — fit and trade-offs |
 | [docs/comparison.md](../comparison.md) | Feature table vs alternatives |
 | [docs/faq.md](../faq.md) | FAQ for featured snippets |
 | [docs/usage.md](../usage.md) | MCP setup (Cursor, Codex, Claude Code) |

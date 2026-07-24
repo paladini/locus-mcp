@@ -1,112 +1,84 @@
-# Locus Positioning
+# Who is Locus for?
 
-What Locus is, what it is not, and when to choose it over alternatives.
+Locus is for people who work on code **through an AI agent** — developers, indie builders, technical PMs, and anyone using Cursor, Codex, or Claude Code who wants the agent to understand code structure, not just search for text.
 
-## What Locus is
+## A good fit
 
-Locus is an MCP server that forwards a subset of LSP capabilities to AI coding agents. It exposes six tools — `locate`, `refs`, `hover`, `diagnostics`, `status`, and `rename` — and returns compact, line-oriented text instead of raw LSP JSON.
+- You already use an MCP-capable agent to read and edit files
+- Your agent wastes time grepping for function names or reading whole files to find a definition
+- You want go-to-definition, find-references, types, and error checking — the same things your IDE does — available to the agent
+- You prefer a small, predictable setup (`npx`, six tools) over a full IDE-inside-MCP stack
 
-Install with `npx @locus-dev/mcp`. The host spawns `serve`; the agent calls MCP tools during sessions.
+## Probably not for you
 
-## Scope
+- You need **symbolic editing, automated refactors, or agent memory** inside MCP → look at [Serena](https://github.com/oraios/serena), which covers more IDE duties in one toolkit
+- You only search logs, configs, or comments → grep is enough; Locus targets typed code symbols
+- Your host already exposes equivalent semantic MCP tools with compact output → you may not need a second layer
 
-Locus handles navigation and diagnostics only. It does not edit files, run refactors, or store agent memory. Those jobs belong to your MCP host (Edit, Grep, terminal) or to tools like Serena that expose symbolic editing over MCP.
+Locus does not compete with Serena on breadth. It complements agents whose hosts already edit well — Cursor's Edit tool, Claude Code, Codex — and adds a focused navigation layer on top.
 
-The narrow scope is intentional: fewer tools to document and select, smaller tool definitions in context, and no overlap with hosts that already edit well.
+## What Locus gives your agent
 
-Built-in language adapters: TypeScript/JavaScript, Python, Go, Rust. Extend via `locus.json` or `.lsp.json`. Serena ships adapters for many more languages out of the box.
+Six MCP tools backed by language servers (the same programs VS Code and Cursor use):
 
-## The problem it addresses
+| Tool | What your agent can do |
+|------|------------------------|
+| `locate` | Find where a symbol is defined |
+| `refs` | List every caller or implementation |
+| `hover` | Read types and documentation |
+| `diagnostics` | Catch compiler and linter errors after edits |
+| `status` | Check whether language servers are ready |
+| `rename` | Preview rename impact (your agent applies the edits) |
 
-Agents often navigate code by reading entire files and grepping strings. That approach:
+Install once with `npx @locus-dev/mcp`. Your agent host spawns the server; you configure MCP once per project.
 
-1. Uses context on irrelevant lines.
-2. Misses overloads, re-exports, and import aliases.
-3. Guesses types instead of asking the language server.
+## Locus vs Serena (honest summary)
 
-Locus gives agents the same symbol resolution, references, hover types, and diagnostics that IDEs use — through MCP, on demand.
+Both connect agents to language servers. The difference is scope:
 
-## Who uses what
+| | Locus | Serena |
+|---|-------|--------|
+| Best for | Navigation + diagnostics on top of your host | Editing, refactoring, and memory inside MCP |
+| Install | `npx @locus-dev/mcp` | `uv tool install serena-agent` |
+| MCP tools | 6 | Many |
+| Symbolic editing | No — use host Edit | Yes |
+| Agent memory | No | Yes |
+| Built-in languages | TS/JS, Python, Go, Rust | 40+ |
 
-| Role | Responsibility |
-|------|----------------|
-| Human | Install Node.js, language servers, and MCP config once per project |
-| AI agent | Call `locate`, `refs`, `hover`, `diagnostics`, `status`, `rename` during sessions |
-| MCP host | Edit files, run terminals, grep — the agent's primary workspace |
-
-## Locus vs Serena
-
-Both connect agents to LSP. They differ in scope and install path.
-
-| | Serena | Locus |
-|---|--------|-------|
-| Install | `uv tool install serena-agent` (Python) | `npx @locus-dev/mcp` (Node.js) |
-| MCP tools | Many (find, edit, refactor, memory, …) | Six (navigation + diagnostics) |
-| Symbolic editing | Yes (`replace_symbol_body`, etc.) | No — use host Edit |
-| Agent memory | Yes | No |
-| Best fit | One MCP stack for editing + semantics | Host already edits well; need LSP navigation |
-
-Serena can be more token-efficient for large symbolic refactors — one `replace_symbol_body` call versus many host-side edits. Choose Serena when you want refactoring and memory inside MCP. Choose Locus when your host handles edits and you want a thin LSP layer.
+Serena can be more efficient for large symbolic refactors — one MCP call to replace a function body vs many host-side edits. Choose Serena when you want that toolkit. Choose Locus when your host handles edits and you only need the map.
 
 Running both at full tool surface is usually redundant. Pick based on whether you need navigation-only or full symbolic editing.
 
-## Locus vs generic LSP bridges
-
-Projects like **mcp-language-server** expose LSP over MCP with variable or raw method surfaces. That flexibility can mean large JSON payloads and unpredictable tool catalogs.
-
-Locus adds a symbol layer: qualified names, fuzzy fallback, status codes (`ok`, `ambiguous_symbol`, `server_starting`, …), and line output agents can scan quickly.
-
-Use a generic bridge when you need passthrough access to uncommon LSP methods. Use Locus when you want a fixed six-tool contract tuned for agents.
-
-## Locus vs native LSP in the host
-
-Cursor, VS Code, and Claude Code embed language intelligence for humans in the UI. Agents do not automatically get that — they use whatever MCP tools the host exposes (often Read, Grep, Edit, Shell).
-
-Locus is an explicit MCP server so agents can request LSP results on demand, in a format tuned for LLMs, with portable config (`locus.toml`, `.lsp.json`).
-
-Skip Locus if your host already exposes equivalent semantic MCP tools with compact output. Add Locus when agents still grep and read blindly despite a capable editor underneath.
-
 ## Locus vs grep
 
-Grep remains essential for logs, comments, config keys, and string literals. Locus does not replace ripgrep.
+Grep stays essential for strings, logs, and config files. Locus handles symbols — definitions, references, types — where the compiler knows the answer.
 
-| Task | Tool |
-|------|------|
-| Find symbol definition | Locus `locate` |
-| Find all references | Locus `refs` |
-| Search string / regex across repo | Host Grep |
-| Type at a position | Locus `hover` |
-| Compiler errors before edit | Locus `diagnostics` |
-| Rename impact preview | Locus `rename` (apply via host edits) |
+| Task | Use |
+|------|-----|
+| Where is `Foo.bar` defined? | Locus `locate` |
+| Who calls this function? | Locus `refs` |
+| Search for `"TODO"` in comments | Grep |
+| Type at a cursor position | Locus `hover` |
 
-Use grep and Locus together, not one instead of the other.
+Use both, not one instead of the other.
 
-## Decision checklist
+## Locus vs generic LSP bridges
 
-Choose **Locus** when:
+Tools like **mcp-language-server** expose raw or variable LSP surfaces over MCP. That flexibility can mean large JSON payloads and unpredictable tool catalogs.
 
-- Your MCP host already handles edits, terminal, and search well
-- Agents waste context reading whole files or grepping for symbols
-- You want six predictable MCP tools with compact output
-- You need `.lsp.json` compatibility or multi-host config portability
+Locus offers a fixed six-tool contract with compact line output (`src/foo.ts:12:4: symbol | snippet`) and status codes agents can scan quickly. Choose a generic bridge when you need passthrough access to uncommon LSP methods. Choose Locus when you want a stable, agent-tuned navigation layer.
 
-Choose **Serena** when:
+## Quick decision guide
 
-- You want symbolic editing and refactoring inside MCP
-- You need agent memory across long sessions
-- You prefer one broad toolkit over host-native edits
+**Choose Locus** when your host edits well and agents need definitions, references, types, and diagnostics on demand.
 
-Choose **grep only** when:
+**Choose Serena** when you want symbolic editing, refactoring, and memory inside MCP.
 
-- Tasks are string search, config trawling, or non-code files
-- No language server exists for the language
-
-Choose **generic LSP bridge** when:
-
-- You need raw or uncommon LSP methods not covered by Locus tools
+**Choose grep only** when work is string search or non-code files with no language server.
 
 ## See also
 
-- [comparison.md](./comparison.md) — feature table vs Serena, mcp-language-server, cclsp
-- [usage.md](./usage.md) — MCP setup for Cursor, Codex, Claude Code
-- [faq.md](./faq.md) — common questions
+- [Getting started](./getting-started.md) — setup in a few minutes
+- [FAQ](./faq.md) — "Do I need to be a programmer?", "What's MCP?", and more
+- [Comparison](./comparison.md) — feature table vs Serena, bridges, and grep
+- [Usage guide](./usage.md) — MCP config for Cursor, Codex, Claude Code
