@@ -37,34 +37,6 @@ jobs:
       - name: Pack MCPB bundle
         run: npm run pack:mcpb
 
-      - name: Publish @paladini/locus-core to npm
-        run: |
-          if [ -n "${NPM_TOKEN:-}" ]; then
-            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "$NPM_CONFIG_USERCONFIG"
-          fi
-          VERSION=$(node -p "require('./packages/core/package.json').version")
-          if npm view "@paladini/locus-core@${VERSION}" version 2>/dev/null; then
-            echo "Skipping npm publish: @paladini/locus-core@${VERSION} already exists"
-          else
-            npm publish -w @paladini/locus-core --provenance --access public
-          fi
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish @paladini/locus-mcp to npm
-        run: |
-          if [ -n "${NPM_TOKEN:-}" ]; then
-            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "$NPM_CONFIG_USERCONFIG"
-          fi
-          VERSION=$(node -p "require('./packages/mcp/package.json').version")
-          if npm view "@paladini/locus-mcp@${VERSION}" version 2>/dev/null; then
-            echo "Skipping npm publish: @paladini/locus-mcp@${VERSION} already exists"
-          else
-            npm publish -w @paladini/locus-mcp --provenance --access public
-          fi
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Configure GitHub Packages auth
         run: |
           cat >> "$NPM_CONFIG_USERCONFIG" <<EOF
@@ -85,12 +57,47 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Publish @paladini/locus-core to npm
+        id: npm-core
+        continue-on-error: true
+        run: |
+          if [ -n "${NPM_TOKEN:-}" ]; then
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "$NPM_CONFIG_USERCONFIG"
+          fi
+          VERSION=$(node -p "require('./packages/core/package.json').version")
+          if npm view "@paladini/locus-core@${VERSION}" version 2>/dev/null; then
+            echo "Skipping npm publish: @paladini/locus-core@${VERSION} already exists"
+          else
+            npm publish -w @paladini/locus-core --provenance --access public
+          fi
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @paladini/locus-mcp to npm
+        id: npm-mcp
+        continue-on-error: true
+        run: |
+          if [ -n "${NPM_TOKEN:-}" ]; then
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "$NPM_CONFIG_USERCONFIG"
+          fi
+          VERSION=$(node -p "require('./packages/mcp/package.json').version")
+          if npm view "@paladini/locus-mcp@${VERSION}" version 2>/dev/null; then
+            echo "Skipping npm publish: @paladini/locus-mcp@${VERSION} already exists"
+          else
+            npm publish -w @paladini/locus-mcp --provenance --access public
+          fi
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Install mcp-publisher
+        if: steps.npm-mcp.outcome == 'success'
         run: |
           curl -sL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
           sudo mv mcp-publisher /usr/local/bin/
 
       - name: Publish to MCP Registry
+        if: steps.npm-mcp.outcome == 'success'
+        continue-on-error: true
         run: |
           mcp-publisher login github-oidc
           mcp-publisher publish
@@ -100,3 +107,17 @@ jobs:
         with:
           files: locus-mcp.mcpb
           generate_release_notes: true
+
+      - name: Verify GitHub Packages publish
+        run: |
+          VERSION=$(node -p "require('./packages/mcp/package.json').version")
+          npm view "@paladini/locus-mcp@${VERSION}" version --registry https://npm.pkg.github.com
+          npm view "@paladini/locus-core@${VERSION}" version --registry https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Report npm publish status
+        if: steps.npm-mcp.outcome != 'success'
+        run: |
+          echo "::warning::npm publish did not complete. Add NPM_TOKEN secret or publish manually once, then configure Trusted Publisher on npmjs.com."
+          exit 0
