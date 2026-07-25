@@ -108,6 +108,16 @@ describe("loadConfig .lsp.json compatibility", () => {
     const { config } = loadConfig(tempDir);
     assert.deepEqual(config.warm, ["typescript", "python"]);
   });
+
+  it("throws on invalid locus.json", () => {
+    writeFileSync(join(tempDir, "locus.json"), "{ not valid json");
+    assert.throws(() => loadConfig(tempDir), SyntaxError);
+  });
+
+  it("throws on invalid locus.toml", () => {
+    writeFileSync(join(tempDir, "locus.toml"), "root = [\n");
+    assert.throws(() => loadConfig(tempDir));
+  });
 });
 
 describe("createRegistry", () => {
@@ -130,6 +140,11 @@ describe("createRegistry", () => {
     });
     const server = registry.getByExtension(".ts");
     assert.equal(server?.command, "my-lsp");
+  });
+
+  it("returns undefined for unknown extension", () => {
+    const registry = createRegistry({});
+    assert.equal(registry.getByExtension(".xyz"), undefined);
   });
 });
 

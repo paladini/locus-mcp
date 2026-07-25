@@ -77,7 +77,10 @@ Integration tests skip automatically when LSP binaries are not on `PATH`.
 | Symbol resolver | core | `resolver.test.ts` |
 | Format layer | core | `format.test.ts`, `format-extended.test.ts` |
 | LSP connection/client | core | `lsp-connection.test.ts`, `lsp-client.test.ts` |
+| LSP connection (fake-lsp) | core | `lsp-connection-integration.test.ts` |
 | LSP manager | core | `lsp-manager.test.ts` |
+| MCP context | mcp | `context.test.ts` |
+| MCP server wiring | mcp | `server.test.ts` |
 | MCP tool schemas | mcp | `tools.test.ts` |
 | MCP tool handlers | mcp | `handlers.test.ts` |
 | Error handling | mcp | `helpers.test.ts`, `handlers.test.ts` |

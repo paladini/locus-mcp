@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/paladini/locus-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/paladini/locus-mcp/actions/workflows/ci.yml)
+[![Website](https://img.shields.io/badge/website-locus--mcp-1a4d4a)](https://paladini.github.io/locus-mcp/)
 
 Locus gives your AI coding agent a map of your codebase. Whether you write code yourself or work through Cursor, Codex, or Claude Code, Locus connects your agent to the same go-to-definition and find-references intelligence your IDE uses — through [MCP](https://modelcontextprotocol.io) (Model Context Protocol), a standard plug-in layer for AI tools. Configure it once; your agent uses six small tools to find symbols, trace callers, read types, and catch errors before you run tests.
 
@@ -128,6 +129,7 @@ Paste these into your agent after Locus is configured:
 | [Comparison](docs/comparison.md) | Locus vs Serena, bridges, and grep |
 | [Tools reference](docs/tools.md) | All six MCP tools with examples |
 | [Configuration](docs/configuration.md) | `locus.toml`, `locus.json`, language servers |
+| [Website](https://paladini.github.io/locus-mcp/) | Lightweight positioning and quick overview |
 
 ## License
 
