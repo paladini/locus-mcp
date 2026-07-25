@@ -38,15 +38,50 @@ jobs:
         run: npm run pack:mcpb
 
       - name: Publish @paladini/locus-core to npm
-        run: npm publish -w @paladini/locus-core --provenance --access public
+        run: |
+          if [ -n "${NPM_TOKEN:-}" ]; then
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "$NPM_CONFIG_USERCONFIG"
+          fi
+          VERSION=$(node -p "require('./packages/core/package.json').version")
+          if npm view "@paladini/locus-core@${VERSION}" version 2>/dev/null; then
+            echo "Skipping npm publish: @paladini/locus-core@${VERSION} already exists"
+          else
+            npm publish -w @paladini/locus-core --provenance --access public
+          fi
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @paladini/locus-mcp to npm
-        run: npm publish -w @paladini/locus-mcp --provenance --access public
-
-      - name: Publish to GitHub Packages
         run: |
-          npm publish -w @paladini/locus-core --registry https://npm.pkg.github.com
-          npm publish -w @paladini/locus-mcp --registry https://npm.pkg.github.com
+          if [ -n "${NPM_TOKEN:-}" ]; then
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "$NPM_CONFIG_USERCONFIG"
+          fi
+          VERSION=$(node -p "require('./packages/mcp/package.json').version")
+          if npm view "@paladini/locus-mcp@${VERSION}" version 2>/dev/null; then
+            echo "Skipping npm publish: @paladini/locus-mcp@${VERSION} already exists"
+          else
+            npm publish -w @paladini/locus-mcp --provenance --access public
+          fi
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Configure GitHub Packages auth
+        run: |
+          cat >> "$NPM_CONFIG_USERCONFIG" <<EOF
+          @paladini:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+          always-auth=true
+          EOF
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish @paladini/locus-core to GitHub Packages
+        run: npm publish -w @paladini/locus-core --registry https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish @paladini/locus-mcp to GitHub Packages
+        run: npm publish -w @paladini/locus-mcp --registry https://npm.pkg.github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
