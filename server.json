@@ -3,7 +3,7 @@
   "name": "io.github.paladini/locus-mcp",
   "title": "Locus",
   "description": "Lightweight MCP server for LSP code intelligence — symbol lookup, refs, types, diagnostics.",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "repository": {
     "url": "https://github.com/paladini/locus-mcp",
     "source": "github"
@@ -12,7 +12,7 @@
     {
       "registryType": "npm",
       "identifier": "@paladini/locus-mcp",
-      "version": "0.1.4",
+      "version": "0.1.5",
       "transport": {
         "type": "stdio"
       },

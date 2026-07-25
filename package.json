@@ -1,6 +1,6 @@
 {
   "name": "locus",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "description": "Agent-first MCP server for LSP-based code intelligence",
   "license": "MIT",

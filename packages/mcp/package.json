@@ -1,6 +1,6 @@
 {
   "name": "@paladini/locus-mcp",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "mcpName": "io.github.paladini/locus-mcp",
   "description": "Locus MCP server — agent-first LSP code intelligence for Cursor, Claude Code, and AI agents",
   "license": "MIT",

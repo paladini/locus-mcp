@@ -3,7 +3,7 @@
   "manifest_version": "0.4",
   "name": "locus-mcp",
   "display_name": "Locus — LSP Code Intelligence",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Lightweight MCP server for LSP code intelligence — symbol lookup, references, types, and diagnostics for AI coding agents.",
   "author": {
     "name": "Fernando Paladini",
