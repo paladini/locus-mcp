@@ -73,6 +73,8 @@ For AI retrieval and comparison pages:
 | [docs/faq.md](../faq.md) | FAQ for featured snippets |
 | [docs/usage.md](../usage.md) | MCP setup (Cursor, Codex, Claude Code) |
 | [docs/tools.md](../tools.md) | Six-tool API reference |
+| [site/index.html](../../site/index.html) | GitHub Pages landing (https://paladini.github.io/locus-mcp/) |
+| [site/index.html](../../site/index.html) | GitHub Pages landing (https://paladini.github.io/locus-mcp/) |
 
 ## JSON-LD (for future docs site)
 

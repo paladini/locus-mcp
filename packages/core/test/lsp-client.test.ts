@@ -255,6 +255,13 @@ describe("LspClient (mocked connection)", () => {
     await assert.rejects(() => client.workspaceSymbol("x"), /server_unavailable/);
   });
 
+  it("throws server_starting when still starting", async () => {
+    await client.start();
+    (client as unknown as { state: string }).state = "starting";
+
+    await assert.rejects(() => client.workspaceSymbol("x"), /server_starting/);
+  });
+
   it("sets unavailable state after failed start", async () => {
     (LspClient.prototype as unknown as { createConnection: () => LspConnection }).createConnection = function () {
       return createMockConnection({

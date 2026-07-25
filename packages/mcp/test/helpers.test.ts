@@ -56,4 +56,16 @@ describe("parsePosition", () => {
     assert.equal(pos?.line, 0);
     assert.equal(pos?.character, 0);
   });
+
+  it("parses backslash Windows paths", () => {
+    const pos = parsePosition("C:\\proj\\src\\foo.ts:2:3");
+    assert.equal(pos?.file, "C:\\proj\\src\\foo.ts");
+    assert.equal(pos?.line, 1);
+    assert.equal(pos?.character, 2);
+  });
+
+  it("returns undefined for non-numeric line or column", () => {
+    assert.equal(parsePosition("src/foo.ts:abc:1"), undefined);
+    assert.equal(parsePosition("src/foo.ts:1:xyz"), undefined);
+  });
 });

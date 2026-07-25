@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/paladini/locus-mcp/issues"
   },
-  "homepage": "https://github.com/paladini/locus-mcp#readme",
+  "homepage": "https://paladini.github.io/locus-mcp/",
   "workspaces": [
     "packages/*"
   ],

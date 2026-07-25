@@ -148,6 +148,35 @@ describe("handleLocate", () => {
     const result = await handleLocate(ctx, { name: "UnknownSymbol" });
     assert.match(resultText(result), /status: server_unavailable/);
   });
+
+  it("returns no_results when symbol not found", async () => {
+    const ctx = mockContext({
+      workspaceSymbol: async () => [],
+    });
+    const result = await handleLocate(ctx, { name: "NonExistent" });
+    assert.match(resultText(result), /status: no_results/);
+  });
+
+  it("maps server_starting errors", async () => {
+    const ctx = mockContext({
+      workspaceSymbol: async () => {
+        throw new Error("server_starting");
+      },
+    });
+    const result = await handleLocate(ctx, { name: "Foo" });
+    assert.match(resultText(result), /status: server_starting/);
+  });
+
+  it("returns no_results for empty document symbols", async () => {
+    const ctx = mockContext({ documentSymbol: async () => [] });
+    const result = await handleLocate(ctx, { file: "src/index.ts" });
+    assert.match(resultText(result), /status: no_results/);
+    assert.match(resultText(result), /No symbols in document/);
+  });
+
+  it("throws on invalid zod input", async () => {
+    await assert.rejects(() => handleLocate(mockContext(), { name: 123 }), /Expected string/);
+  });
 });
 
 describe("handleRefs", () => {
@@ -190,6 +219,30 @@ describe("handleRefs", () => {
     assert.match(resultText(result), /status: ok/);
     assert.match(resultText(result), /impl\.ts/);
   });
+
+  it("returns no_results when references are empty", async () => {
+    const ctx = mockContext({ references: async () => [] });
+    const result = await handleRefs(ctx, {
+      file: "src/index.ts",
+      line: 0,
+      character: 0,
+    });
+    assert.match(resultText(result), /status: no_results/);
+  });
+
+  it("maps server_starting on references", async () => {
+    const ctx = mockContext({
+      references: async () => {
+        throw new Error("server_starting");
+      },
+    });
+    const result = await handleRefs(ctx, {
+      file: "src/index.ts",
+      line: 0,
+      character: 0,
+    });
+    assert.match(resultText(result), /status: server_starting/);
+  });
 });
 
 describe("handleHover", () => {
@@ -206,6 +259,18 @@ describe("handleHover", () => {
   it("resolves symbol by name before hover", async () => {
     const result = await handleHover(mockContext(), { name: "Greeter", file: "src/index.ts" });
     assert.match(resultText(result), /status: ok/);
+  });
+
+  it("returns error when position is missing", async () => {
+    const result = await handleHover(mockContext(), { file: "src/index.ts" });
+    assert.match(resultText(result), /status: error/);
+    assert.match(resultText(result), /Provide file\+position/);
+  });
+
+  it("returns no_results when symbol name not found", async () => {
+    const ctx = mockContext({ workspaceSymbol: async () => [] });
+    const result = await handleHover(ctx, { name: "Missing", file: "src/index.ts" });
+    assert.match(resultText(result), /status: no_results/);
   });
 });
 
@@ -226,6 +291,20 @@ describe("handleDiagnostics", () => {
     const result = await handleDiagnostics(ctx, { file: "src/index.ts" });
     assert.match(resultText(result), /status: ok/);
     assert.match(resultText(result), /Type error/);
+  });
+
+  it("returns ok when workspace has no diagnostics", async () => {
+    const ctx = mockContext({ getOpenDocuments: () => [] });
+    const result = await handleDiagnostics(ctx, { workspace: true });
+    assert.match(resultText(result), /status: ok/);
+    assert.match(resultText(result), /No workspace diagnostics/);
+  });
+
+  it("returns server_unavailable when no LSP for file", async () => {
+    const ctx = mockContext();
+    ctx.manager.getClientForFile = async () => undefined;
+    const result = await handleDiagnostics(ctx, { file: "src/unknown.xyz" });
+    assert.match(resultText(result), /status: server_unavailable/);
   });
 });
 
@@ -259,5 +338,24 @@ describe("handleRename", () => {
       new_name: "X",
     });
     assert.match(resultText(result), /status: no_results/);
+  });
+
+  it("returns apply plan when apply=true", async () => {
+    const result = await handleRename(mockContext(), {
+      file: "src/index.ts",
+      line: 0,
+      character: 0,
+      new_name: "Renamed",
+      apply: true,
+    });
+    assert.match(resultText(result), /status: ok/);
+    assert.match(resultText(result), /Rename plan generated/);
+    assert.match(resultText(result), /Apply edits via host Edit tool/);
+  });
+
+  it("returns error when position is missing", async () => {
+    const result = await handleRename(mockContext(), { new_name: "X" });
+    assert.match(resultText(result), /status: error/);
+    assert.match(resultText(result), /Provide file\+position/);
   });
 });

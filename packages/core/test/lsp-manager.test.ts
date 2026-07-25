@@ -168,4 +168,12 @@ describe("LspManager", () => {
     const second = await manager.getClientForFile("b.ts");
     assert.equal(first, second);
   });
+
+  it("returns undefined client for unknown file extension", async () => {
+    tempDir = mkdtempSync(join(tmpdir(), "locus-manager-"));
+    manager = new LspManager(tempDir, testConfigs());
+
+    const client = await manager.getClientForFile("readme.md");
+    assert.equal(client, undefined);
+  });
 });
