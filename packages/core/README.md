@@ -3,6 +3,7 @@
 Core library for [Locus](https://github.com/paladini/locus-mcp) — LSP client, language-server registry, symbol resolution, and agent-friendly output formatting.
 
 [![npm version](https://img.shields.io/npm/v/@paladini/locus-core)](https://www.npmjs.com/package/@paladini/locus-core)
+[![JSR](https://jsr.io/badges/@paladini/locus-core)](https://jsr.io/@paladini/locus-core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/paladini/locus-mcp/blob/main/LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22-brightgreen)](https://nodejs.org/)
 
