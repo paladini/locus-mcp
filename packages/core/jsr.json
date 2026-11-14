@@ -1,0 +1,12 @@
+{
+  "name": "@paladini/locus-core",
+  "version": "0.1.5",
+  "license": "MIT",
+  "description": "LSP client, registry, symbol layer, and format utilities for Locus — MCP server for LSP code intelligence",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publish": {
+    "include": ["src/**/*.ts", "README.md", "../../LICENSE"]
+  }
+}

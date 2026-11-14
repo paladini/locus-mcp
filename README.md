@@ -1,6 +1,7 @@
 # Locus
 
 [![npm version](https://img.shields.io/npm/v/@paladini/locus-mcp)](https://www.npmjs.com/package/@paladini/locus-mcp)
+[![JSR](https://jsr.io/badges/@paladini/locus-mcp)](https://jsr.io/@paladini/locus-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22-brightgreen)](https://nodejs.org/)
 [![CI](https://github.com/paladini/locus-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/paladini/locus-mcp/actions/workflows/ci.yml)
@@ -36,6 +37,17 @@ It is **not** for people who want symbolic editing, agent memory, or a full refa
 5. **Try a prompt** — ask your agent: *"Use Locus to find where `UserService` is defined and list all references."* If it calls the `locate` and `refs` tools, you are set.
 
 **Requirements:** Node.js 22+. Language servers on your `PATH` for the languages you use.
+
+### Install from JSR (Deno / Bun)
+
+JSR publishes TypeScript sources for `@paladini/locus-mcp` and `@paladini/locus-core`:
+
+```bash
+npx jsr add @paladini/locus-mcp
+# library-only: npx jsr add @paladini/locus-core
+```
+
+Use npm (`npx @paladini/locus-mcp`) when you need the prebuilt CLI on Node.js 22+.
 
 ## Copy-paste configs
 
